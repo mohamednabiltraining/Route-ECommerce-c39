@@ -7,7 +7,7 @@
 
         <variable
             name="category"
-            type="com.example.routee_commerce.model.Category" />
+            type="com.route.domain.models.Category" />
 
     </data>
 

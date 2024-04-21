@@ -4,7 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.routee_commerce.databinding.ItemCategoryBinding
-import com.example.routee_commerce.model.Category
+import com.route.domain.models.Category
 
 class CategoriesAdapter(private var categories: List<Category?>? = null) :
     RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {

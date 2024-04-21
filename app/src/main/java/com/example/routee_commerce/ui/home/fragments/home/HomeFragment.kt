@@ -5,36 +5,52 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.routee_commerce.R
+import com.example.routee_commerce.base.BaseFragment
+import com.example.routee_commerce.base.BaseViewModel
 import com.example.routee_commerce.databinding.FragmentHomeBinding
-import com.example.routee_commerce.model.Category
 import com.example.routee_commerce.model.Product
 import com.example.routee_commerce.ui.home.fragments.home.adapters.CategoriesAdapter
 import com.example.routee_commerce.ui.home.fragments.home.adapters.ProductsAdapter
 import com.example.routee_commerce.ui.productDetails.ProductDetailsActivity
+import com.route.domain.models.Category
+import dagger.hilt.android.AndroidEntryPoint
 
 
-class HomeFragment : Fragment() {
-    private lateinit var binding: FragmentHomeBinding
+@AndroidEntryPoint
+class HomeFragment : BaseFragment<FragmentHomeBinding,HomeFragmentViewModel> (){
      private val categoriesAdapter = CategoriesAdapter()
      private val mostSellingProductsAdapter = ProductsAdapter()
      private val categoryProductsAdapter = ProductsAdapter()
 
+    private val mViewModel : HomeFragmentViewModel by viewModels()
+    override fun initViewModel(): HomeFragmentViewModel {
+        return mViewModel
+    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        return binding.root
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_home
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initViews()
+        observeLiveData()
+        viewModel.getCategories()
 
+    }
+
+    private fun observeLiveData() {
+        viewModel.categories.observe(viewLifecycleOwner){
+            it?.let {
+                binding.categoriesShimmerViewContainer.isGone = true
+                categoriesAdapter.bindCategories(it)
+            }
+        }
     }
 
     private fun initViews() {
@@ -64,24 +80,6 @@ class HomeFragment : Fragment() {
     private fun navigateToCategoriesFragment(category: Category) {
 //        val action = HomeFragmentDirections.actionHomeFragmentToCategoriesFragment(category)
 //        findNavController().navigate(action)
-    }
-
-
-
-    override fun onResume() {
-        super.onResume()
-//        binding.categoriesShimmerViewContainer.startShimmer()
-    }
-
-    override fun onPause() {
-//        binding.categoriesShimmerViewContainer.stopShimmer()
-        super.onPause()
-
-    }
-    override fun onDestroyView() {
-        super.onDestroyView()
-        binding.unbind()
-
     }
 
 

@@ -8,7 +8,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.routee_commerce.R
 import com.example.routee_commerce.databinding.ItemCategoryRectBinding
-import com.example.routee_commerce.model.Category
+import com.route.domain.models.Category
 
 class CategoriesAdapter(private var categories: List<Category?>? = null) :
     RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {

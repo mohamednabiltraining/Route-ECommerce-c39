@@ -2,6 +2,7 @@ package com.example.routee_commerce.model
 
 import kotlinx.parcelize.Parcelize
 import android.os.Parcelable
+import com.route.domain.models.Category
 
 @Parcelize
 data class WishListItem(

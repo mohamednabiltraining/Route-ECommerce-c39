@@ -1,14 +1,12 @@
-package com.example.routee_commerce.model
+package com.route.domain.models
 
-import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import android.os.Parcelable
 
 @Parcelize
 data class Category(
 	val image: String? = null,
-	val createdAt: String? = null,
 	val name: String? = null,
 	val id: String? = null,
-	val slug: String? = null,
-	val updatedAt: String? = null
+	val slug: String? = null
 ) : Parcelable

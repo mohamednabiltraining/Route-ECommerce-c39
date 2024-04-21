@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.routee_commerce.databinding.FragmentCategoriesBinding
-import com.example.routee_commerce.model.Category
 import com.example.routee_commerce.ui.home.fragments.categories.adapters.CategoriesAdapter
 import com.example.routee_commerce.ui.home.fragments.categories.adapters.SubcategoriesAdapter
+import com.route.domain.models.Category
 
 import com.squareup.picasso.Picasso
 

@@ -18,9 +18,9 @@ class ProductsAdapter(private var products: List<Product?>? = null) :
             itemProductBinding.product = product
             itemProductBinding.executePendingBindings()
             if (product?.priceAfterDiscount != null) {
-                itemProductBinding.productPrice.text = "EGP ${product?.priceAfterDiscount}"
+                itemProductBinding.productPrice.text = "EGP ${product.priceAfterDiscount}"
                 itemProductBinding.productOldPrice.isVisible = true
-                itemProductBinding.productOldPrice.text = "EGP ${product?.price}"
+                itemProductBinding.productOldPrice.text = "EGP ${product.price}"
                 itemProductBinding.productOldPrice.paintFlags =
                     itemProductBinding.productOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             } else {

@@ -1,6 +1,7 @@
 package com.example.routee_commerce.model
 
 import android.os.Parcelable
+import com.route.domain.models.Category
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

@@ -23,7 +23,7 @@ class ProductListFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentProductListBinding.inflate(inflater, container, false)
         return binding.root
 

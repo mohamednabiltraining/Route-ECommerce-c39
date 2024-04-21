@@ -5,10 +5,7 @@
 
     <data>
 
-        <variable
-            name="vm"
-            type="com.example.routee_commerce.ui.userAuthentication.fragments.register.RegisterViewModel" />
-    </data>
+      </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -59,12 +56,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.username}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.usernameError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -89,12 +83,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.phoneNumber}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.phoneNumberError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -118,12 +109,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.email}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.emailError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -147,12 +135,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.password}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.passwordError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -176,12 +161,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.passwordConfirmation}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.passwordConfirmationError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/login_do_have_account_tv"

@@ -9,7 +9,9 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.routee_commerce.R
 import com.example.routee_commerce.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {

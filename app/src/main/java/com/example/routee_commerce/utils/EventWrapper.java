@@ -18,7 +18,7 @@ package com.example.routee_commerce.utils;
 
 public class EventWrapper<T> {
 
-    private T mContent;
+    private final T mContent;
 
     private boolean hasBeenHandled = false;
 

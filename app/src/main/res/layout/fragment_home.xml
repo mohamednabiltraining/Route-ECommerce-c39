@@ -71,46 +71,64 @@
                     android:orientation="horizontal"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <TextView
-                    android:id="@+id/categories_tv"
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/section_categories"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="20dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/categories"
-                    android:textColor="@color/blue"
-                    android:textSize="18sp"
-                    app:layout_constraintTop_toBottomOf="@id/most_selling_products_shimmer_view_container" />
-
-
-                <com.facebook.shimmer.ShimmerFrameLayout
-                    android:id="@+id/categories_shimmer_view_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="10dp"
-                    android:orientation="vertical"
-                    app:duration="800"
-                    app:layout_constraintTop_toBottomOf="@id/categories_tv">
-
-
-                    <LinearLayout
+                    app:layout_constraintTop_toBottomOf="@id/most_selling_products_shimmer_view_container"
+                    >
+                    <TextView
+                        android:id="@+id/categories_tv"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="20dp"
+                        android:fontFamily="@font/poppins_medium"
+                        android:text="@string/categories"
+                        android:textColor="@color/blue"
+                        android:textSize="18sp"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                        <include layout="@layout/home_fragment_categories_placeholder_layout" />
+                    <com.facebook.shimmer.ShimmerFrameLayout
+                        android:id="@+id/categories_shimmer_view_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="10dp"
+                        android:orientation="vertical"
+                        app:duration="800"
+                        app:layout_constraintTop_toBottomOf="@id/categories_tv">
 
-                        <include layout="@layout/home_fragment_categories_placeholder_layout" />
 
-                        <include layout="@layout/home_fragment_categories_placeholder_layout" />
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                    </LinearLayout>
+                            <include layout="@layout/home_fragment_categories_placeholder_layout" />
+
+                            <include layout="@layout/home_fragment_categories_placeholder_layout" />
+
+                            <include layout="@layout/home_fragment_categories_placeholder_layout" />
+
+                        </LinearLayout>
 
 
-                </com.facebook.shimmer.ShimmerFrameLayout>
+                    </com.facebook.shimmer.ShimmerFrameLayout>
 
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/categories_rv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="10dp"
+                        android:layout_marginTop="10dp"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                        android:orientation="horizontal"
+                        app:layout_constraintTop_toBottomOf="@id/categories_tv"
+                        tools:listitem="@layout/item_category" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
                 <TextView
                     android:id="@+id/category_name_tv"
                     android:layout_width="match_parent"
@@ -120,19 +138,9 @@
                     android:fontFamily="@font/poppins_medium"
                     android:textColor="@color/blue"
                     android:textSize="18sp"
-                    app:layout_constraintTop_toBottomOf="@id/categories_shimmer_view_container"
+                    app:layout_constraintTop_toBottomOf="@id/section_categories"
                     tools:text="Beauty Health" />
 
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/categories_rv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="10dp"
-                    android:layout_marginTop="10dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/categories_tv"
-                   tools:listitem="@layout/item_category" />
 
                 <com.facebook.shimmer.ShimmerFrameLayout
                     android:id="@+id/category_products_shimmer_view_container"

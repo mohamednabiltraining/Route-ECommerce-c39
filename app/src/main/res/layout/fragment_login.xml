@@ -4,9 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <variable
-            name="vm"
-            type="com.example.routee_commerce.ui.userAuthentication.fragments.login.LoginViewModel" />
     </data>
 
     <ScrollView
@@ -73,12 +70,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.email}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.emailError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -102,12 +96,9 @@
                     android:maxLines="1"
                     android:minLines="1"
                     android:padding="18dp"
-                    android:text="@={vm.password}"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"
-                    app:Error="@{vm.passwordError}"
-                    app:clearFocusOnCondition="@{vm.shouldClearFocus}" />
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/forgot_password"
