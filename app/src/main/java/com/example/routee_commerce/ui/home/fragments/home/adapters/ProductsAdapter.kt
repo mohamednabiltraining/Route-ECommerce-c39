@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.routee_commerce.databinding.ItemProductBinding
-import com.example.routee_commerce.model.Product
+import com.route.domain.models.Product
 
 class ProductsAdapter(private var products: List<Product?>? = null) :
     RecyclerView.Adapter<ProductsAdapter.ViewHolder>() {
@@ -36,8 +36,8 @@ class ProductsAdapter(private var products: List<Product?>? = null) :
             ItemProductBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
-            )
+                false,
+            ),
         )
     }
 
@@ -46,6 +46,11 @@ class ProductsAdapter(private var products: List<Product?>? = null) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = products!![position]
         holder.bind(product)
+        openProductDetails?.let {
+            holder.itemView.setOnClickListener {
+                openProductDetails?.invoke(product!!)
+            }
+        }
         addProductToWishListClicked?.let {
             holder.itemProductBinding.addToWishlistBtn.setOnClickListener {
                 addProductToWishListClicked?.invoke(product!!)
@@ -63,7 +68,7 @@ class ProductsAdapter(private var products: List<Product?>? = null) :
         notifyDataSetChanged()
     }
 
+    var openProductDetails: ((product: Product) -> Unit)? = null
     var addProductToWishListClicked: ((product: Product) -> Unit)? = null
     var addProductToCartClicked: ((product: Product) -> Unit)? = null
-
 }

@@ -7,9 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class GetCategoriesUseCase @Inject constructor(
-    private val categoriesRepository: CategoriesRepository
+    private val categoriesRepository: CategoriesRepository,
 ) {
     suspend fun invoke(): Flow<Resource<List<Category>?>> {
-       return categoriesRepository.getAllCategories()
+        return categoriesRepository.getAllCategories()
     }
 }

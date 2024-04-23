@@ -35,12 +35,12 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.viewMessage.observe(viewLifecycleOwner) {
             showDialog(it)
         }
-    }
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()

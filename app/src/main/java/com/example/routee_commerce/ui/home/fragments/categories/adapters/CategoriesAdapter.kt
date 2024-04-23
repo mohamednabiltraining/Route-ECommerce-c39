@@ -1,5 +1,6 @@
 package com.example.routee_commerce.ui.home.fragments.categories.adapters
 
+import android.annotation.SuppressLint
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,7 +14,7 @@ import com.route.domain.models.Category
 class CategoriesAdapter(private var categories: List<Category?>? = null) :
     RecyclerView.Adapter<CategoriesAdapter.ViewHolder>() {
 
-    class ViewHolder(val itemCategoryBinding: ItemCategoryRectBinding) :
+    class ViewHolder(private val itemCategoryBinding: ItemCategoryRectBinding) :
         RecyclerView.ViewHolder(itemCategoryBinding.root) {
         fun bind(category: Category?, isSelected: Boolean) {
             itemCategoryBinding.category = category
@@ -22,22 +23,20 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
                 itemCategoryBinding.root.setBackgroundColor(
                     ContextCompat.getColor(
                         itemCategoryBinding.root.context,
-                        R.color.white
-                    )
+                        R.color.white,
+                    ),
                 )
                 itemCategoryBinding.draggingBar.visibility = View.VISIBLE
             } else {
                 itemCategoryBinding.root.setBackgroundColor(
                     ContextCompat.getColor(
                         itemCategoryBinding.root.context,
-                        R.color.rv_bg
-                    )
+                        R.color.rv_bg,
+                    ),
                 )
                 itemCategoryBinding.draggingBar.visibility = View.GONE
             }
         }
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -45,8 +44,8 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
             ItemCategoryRectBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
-            )
+                false,
+            ),
         )
     }
 
@@ -63,20 +62,17 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
                 notifyItemChanged(position)
                 categoryClicked.invoke(position, category)
                 Log.i("categories item@", "$position selected")
-
             }
         }
-
-
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun bindCategories(categories: List<Category?>) {
         this.categories = categories
         notifyDataSetChanged()
     }
 
     fun selectItemOfCategory(category: Category?) {
-
         val index = categories?.indexOf(category)
 
         index?.let {
@@ -84,13 +80,10 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
             selectedPosition = index
             notifyItemChanged(index)
             Log.i("category item@", "$index selected")
-
         }
 
         Log.i("index item@", "$index")
-
     }
 
     var categoryClicked: ((position: Int, category: Category) -> Unit)? = null
-
 }

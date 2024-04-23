@@ -46,4 +46,11 @@
     <string name="sign_in_with_your_mail">Please sign in with your mail</string>
     <string name="sign_in">Sign in</string>
     <string name="forgot_password">Forgot Password?</string>
+    <string name="no_product_found_message">No products founded in this category</string>
+    <string name="add_to_wishlist">Add to wishlist</string>
+    <string name="product_details">Product Details</string>
+    <string name="sold">Sold</string>
+    <string name="description">Description</string>
+    <string name="size">Size</string>
+    <string name="colors">Colors</string>
 </resources>

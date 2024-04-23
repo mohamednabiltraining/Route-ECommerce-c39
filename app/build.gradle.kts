@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.android.hilt)
-
+    id("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -28,7 +28,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -54,22 +54,29 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    //navigation component
+
+    // viewPager2
+    implementation(libs.androidx.viewpager2)
+
+    // navigation component
     implementation(libs.androidx.navigation.fragment)
     implementation(libs.androidx.navigation.ui)
 
-    //shimmer effect
+    // shimmer effect
     implementation(libs.shimmer.effect)
-    //rounded image
+    // rounded image
     implementation(libs.roundedimage)
 
-    //glide
+    // glide
     implementation(libs.glide)
-    //picasso
+    // picasso
     implementation(libs.picasso)
+
+    // Pager Dots Indicator
+    implementation(libs.dotsindicator)
+
     implementation(project(":data"))
     implementation(project(":domain"))
-
 
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
@@ -81,7 +88,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-
-
-
 }

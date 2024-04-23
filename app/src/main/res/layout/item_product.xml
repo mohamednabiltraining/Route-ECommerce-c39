@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="com.example.routee_commerce.model.Product" />
+            type="com.route.domain.models.Product" />
 
     </data>
 
@@ -43,7 +43,7 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@{product.title}"
-                android:textColor="@color/Darkblue"
+                android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -80,7 +80,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_regular"
                 android:text="@string/egp_1_200"
-                android:textColor="@color/Darkblue"
+                android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/product_name"
                 app:layout_constraintTop_toBottomOf="@id/product_name" />
@@ -105,7 +105,7 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_regular"
                 android:text="@string/review"
-                android:textColor="@color/Darkblue"
+                android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/product_price"
                 app:layout_constraintTop_toBottomOf="@id/product_price" />
@@ -117,7 +117,7 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_regular"
-                android:textColor="@color/Darkblue"
+                android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@id/review_tv"
                 app:layout_constraintTop_toBottomOf="@id/product_price"

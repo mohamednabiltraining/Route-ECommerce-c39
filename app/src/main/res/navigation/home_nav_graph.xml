@@ -28,12 +28,24 @@
             android:defaultValue="@null"
             app:argType="com.route.domain.models.Category"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_categoriesFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
     </fragment>
     <fragment
         android:id="@+id/productListFragment"
         android:name="com.example.routee_commerce.ui.home.fragments.productList.ProductListFragment"
         android:label="ProductListFragment"
-        tools:layout="@layout/fragment_product_list" />
+        tools:layout="@layout/fragment_product_list">
+        <argument
+            android:name="category"
+            app:argType="com.route.domain.models.Category" />
+        <argument
+            android:name="subcategory"
+            android:defaultValue="@null"
+            app:argType="com.route.domain.models.Subcategory"
+            app:nullable="true" />
+    </fragment>
     <fragment
         android:id="@+id/wishListFragment"
         android:name="com.example.routee_commerce.ui.home.fragments.wishlist.WishListFragment"

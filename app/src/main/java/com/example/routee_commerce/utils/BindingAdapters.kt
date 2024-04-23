@@ -1,6 +1,5 @@
 package com.example.routee_commerce.utils
 
-
 import android.view.View
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
@@ -10,7 +9,7 @@ import com.squareup.picasso.Picasso
 
 class BindingAdapters {
     companion object {
-        @BindingAdapter("app:urlCircular")
+        @BindingAdapter("urlCircular")
         @JvmStatic
         fun bindImageCircular(imageView: ImageView, url: String?) {
             Picasso.get()
@@ -20,7 +19,7 @@ class BindingAdapters {
                 .into(imageView)
         }
 
-        @BindingAdapter("app:url")
+        @BindingAdapter("url")
         @JvmStatic
         fun bindImage(imageView: ImageView, url: String?) {
             Picasso.get()
@@ -29,16 +28,16 @@ class BindingAdapters {
                 .fit()
                 .into(imageView)
         }
-
     }
 }
-@BindingAdapter("app:Error")
+
+@BindingAdapter("Error")
 fun setTextInputLayoutError(textInputLayout: TextInputLayout, error: String?) {
     textInputLayout.error = error
     textInputLayout.errorIconDrawable = null
 }
 
-@BindingAdapter("app:clearFocusOnCondition")
+@BindingAdapter("clearFocusOnCondition")
 fun clearFocusOnCondition(view: View, condition: Boolean) {
     if (condition) {
         view.clearFocus()

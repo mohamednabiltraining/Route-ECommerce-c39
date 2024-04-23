@@ -1,5 +1,6 @@
 package com.example.routee_commerce.ui.home.fragments.home.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -21,8 +22,8 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
             ItemCategoryBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
-                false
-            )
+                false,
+            ),
         )
     }
 
@@ -30,15 +31,20 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val category = categories?.get(position)!!
+        Log.e("cat->", "$category.slug")
         holder.bind(category)
-        if (!holder.itemView.hasOnClickListeners()) {
+        /*if (!holder.itemView.hasOnClickListeners()) {
             categoryClicked?.let { categoryClicked ->
                 holder.itemView.setOnClickListener {
                     categoryClicked.invoke(position, category)
                 }
             }
+        }*/
+        if (onCategoryClickListener != null) {
+            holder.itemView.setOnClickListener {
+                onCategoryClickListener?.onClick(category)
+            }
         }
-
     }
 
     fun bindCategories(categories: List<Category?>) {
@@ -47,4 +53,13 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
     }
 
     var categoryClicked: ((position: Int, category: Category) -> Unit)? = null
+
+    private var onCategoryClickListener: OnCategoryClickListener? = null
+    fun setOnCategoryClickListener(listener: OnCategoryClickListener) {
+        onCategoryClickListener = listener
+    }
+
+    fun interface OnCategoryClickListener {
+        fun onClick(category: Category)
+    }
 }
