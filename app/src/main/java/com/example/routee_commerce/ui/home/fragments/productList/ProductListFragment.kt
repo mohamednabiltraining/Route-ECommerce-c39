@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
+import com.example.routee_commerce.Constants.PRODUCT
 import com.example.routee_commerce.R
 import com.example.routee_commerce.base.BaseFragment
 import com.example.routee_commerce.databinding.FragmentProductListBinding
@@ -18,7 +19,6 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsListViewModel>() {
     companion object {
         const val SEARCH_KEY_WORD = "searchKeyWord"
-        const val PRODUCT = "product"
     }
 
     private val mViewModel: ProductsListViewModel by viewModels()

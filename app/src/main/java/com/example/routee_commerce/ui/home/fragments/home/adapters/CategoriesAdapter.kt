@@ -52,7 +52,7 @@ class CategoriesAdapter(private var categories: List<Category?>? = null) :
         notifyDataSetChanged()
     }
 
-    var categoryClicked: ((position: Int, category: Category) -> Unit)? = null
+    // var categoryClicked: ((position: Int, category: Category) -> Unit)? = null
 
     private var onCategoryClickListener: OnCategoryClickListener? = null
     fun setOnCategoryClickListener(listener: OnCategoryClickListener) {

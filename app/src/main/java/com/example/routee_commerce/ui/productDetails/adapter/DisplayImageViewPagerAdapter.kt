@@ -4,11 +4,11 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.routee_commerce.databinding.ItemViewpagerImageBinding
+import com.example.routee_commerce.databinding.ItemViewpagerDisplayImageBinding
 
-class ImageViewPagerAdapter(private var imagesUrlList: List<String?>? = null) :
-    RecyclerView.Adapter<ImageViewPagerAdapter.ImageViewHolder>() {
-    class ImageViewHolder(private val binding: ItemViewpagerImageBinding) :
+class DisplayImageViewPagerAdapter(private var imagesUrlList: List<String?>? = null) :
+    RecyclerView.Adapter<DisplayImageViewPagerAdapter.ImageViewHolder>() {
+    class ImageViewHolder(private val binding: ItemViewpagerDisplayImageBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(imageUrl: String?) {
             imageUrl?.let {
@@ -19,7 +19,7 @@ class ImageViewPagerAdapter(private var imagesUrlList: List<String?>? = null) :
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageViewHolder {
         val binding =
-            ItemViewpagerImageBinding.inflate(
+            ItemViewpagerDisplayImageBinding.inflate(
                 LayoutInflater.from(parent.context),
                 parent,
                 false,
@@ -32,11 +32,6 @@ class ImageViewPagerAdapter(private var imagesUrlList: List<String?>? = null) :
     override fun onBindViewHolder(holder: ImageViewHolder, position: Int) {
         val imageUrl = imagesUrlList?.get(position)
         holder.bind(imageUrl)
-        openProductImages?.let {
-            holder.itemView.setOnClickListener {
-                openProductImages?.invoke(position)
-            }
-        }
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -44,6 +39,4 @@ class ImageViewPagerAdapter(private var imagesUrlList: List<String?>? = null) :
         this.imagesUrlList = imagesUrl
         notifyDataSetChanged()
     }
-
-    var openProductImages: ((position: Int) -> Unit)? = null
 }

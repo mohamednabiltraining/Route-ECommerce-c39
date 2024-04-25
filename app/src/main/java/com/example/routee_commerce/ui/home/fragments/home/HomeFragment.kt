@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import com.example.routee_commerce.Constants.PRODUCT
 import com.example.routee_commerce.R
 import com.example.routee_commerce.base.BaseFragment
 import com.example.routee_commerce.databinding.FragmentHomeBinding
@@ -17,10 +18,6 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() {
-    companion object {
-        const val PRODUCT = "product"
-    }
-
     private val categoriesAdapter = CategoriesAdapter()
     private val mostSellingProductsAdapter = ProductsAdapter()
     private val categoryProductsAdapter = ProductsAdapter()

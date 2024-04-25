@@ -75,6 +75,9 @@ dependencies {
     // Pager Dots Indicator
     implementation(libs.dotsindicator)
 
+    // touchImage
+    implementation(libs.touch.imageview)
+
     implementation(project(":data"))
     implementation(project(":domain"))
 
