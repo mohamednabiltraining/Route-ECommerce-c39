@@ -12,7 +12,7 @@ class FiltersAdapter(
         val binding: ItemFilterBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(filterName: String) {
-            binding.filterName.text = filterName
+            binding.btnFilterItem.text = filterName
         }
     }
 
@@ -30,14 +30,14 @@ class FiltersAdapter(
 
     override fun onBindViewHolder(holder: FilterViewHolder, position: Int) {
         val filterName = filtersList?.get(position)
-        holder.binding.cancelFilter.setOnClickListener {
+        holder.itemView.setOnClickListener {
             if (filterName != null) {
-                cancelFilter?.invoke(filterName)
-                filtersList?.removeAt(position)
-                notifyItemRemoved(position)
+                choseFilter?.invoke(filterName)
+//                filtersList?.removeAt(position)
+//                notifyItemRemoved(position)
             }
         }
     }
 
-    var cancelFilter: ((filterName: String) -> Unit)? = null
+    var choseFilter: ((filterName: String) -> Unit)? = null
 }
