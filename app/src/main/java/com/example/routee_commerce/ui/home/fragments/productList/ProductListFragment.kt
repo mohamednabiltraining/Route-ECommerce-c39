@@ -41,7 +41,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         showLoadingView()
         initView()
         observeData()
-        viewModel.getCategoryProducts(args.category)
+        viewModel.getCategoryProducts(args.categoryId)
     }
 
     private fun observeData() {
@@ -91,7 +91,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         binding.errorMessage.text = message
         binding.tryAgainBtn.setOnClickListener {
 //            SearchForProducts(searchKeyWord)
-            viewModel.getCategoryProducts(args.category)
+            viewModel.getCategoryProducts(args.categoryId)
         }
     }
 

@@ -5,7 +5,7 @@
 
     <data>
 
-      </data>
+    </data>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -85,7 +85,7 @@
                     android:padding="18dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -111,7 +111,7 @@
                     android:padding="18dp"
                     android:textColor="@color/black"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp"/>
+                    android:textSize="14sp" />
 
                 <TextView
                     android:layout_width="match_parent"

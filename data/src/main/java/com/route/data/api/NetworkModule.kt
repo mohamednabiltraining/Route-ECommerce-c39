@@ -15,7 +15,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 class NetworkModule {
 
     @Provides
-    fun provideLoggingInterceptor():HttpLoggingInterceptor{
+    fun provideLoggingInterceptor(): HttpLoggingInterceptor {
         val loggingInterceptor = HttpLoggingInterceptor {
             Log.e("retrofit", "$it")
         }
@@ -24,28 +24,31 @@ class NetworkModule {
     }
 
     @Provides
-    fun provideOkHttp(loggingInterceptor: HttpLoggingInterceptor)
-    :OkHttpClient {
+    fun provideOkHttp(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
             .build()
     }
+
     @Provides
-    fun provideGson():GsonConverterFactory{
+    fun provideGson(): GsonConverterFactory {
         return GsonConverterFactory.create()
     }
+
     @Provides
-    fun provideRetrofit(okhttp:OkHttpClient,
-                        gson:GsonConverterFactory):Retrofit{
+    fun provideRetrofit(
+        okhttp: OkHttpClient,
+        gson: GsonConverterFactory,
+    ): Retrofit {
         return Retrofit.Builder()
             .client(okhttp)
             .addConverterFactory(gson)
-            .baseUrl("https://ecommerce.routemisr.com" )
+            .baseUrl("https://ecommerce.routemisr.com")
             .build()
-
     }
+
     @Provides
-    fun provideWebServices(retrofit:Retrofit):WebServices{
+    fun provideWebServices(retrofit: Retrofit): WebServices {
         return retrofit.create(WebServices::class.java)
     }
 }

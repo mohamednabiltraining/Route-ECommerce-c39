@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.routee_commerce.Constants.PRODUCT
 import com.example.routee_commerce.R
 import com.example.routee_commerce.base.BaseFragment
@@ -64,16 +65,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
 
     private fun initViews() {
         /*categoriesAdapter.categoryClicked = { position, category ->
-//            navigateToCategoriesFragment(category)
+            navigateToCategoriesFragment(category)
             binding.categoryNameTv.text = category.name
             viewModel.getCategoryProducts(category)
         }*/
         categoriesAdapter.setOnCategoryClickListener { category ->
-            binding.categoryNameTv.text = category.name
+            /*binding.categoryNameTv.text = category.name
             binding.categoryProductsShimmerViewContainer.isGone = false
             binding.emptyCategoryMessage.isGone = true
             binding.categoryProductsRv.visibility = View.INVISIBLE
-            viewModel.getCategoryProducts(category)
+            viewModel.getCategoryProducts(category)*/
+            navigateToCategoriesFragment(category)
         }
         binding.categoriesRv.adapter = categoriesAdapter
         binding.mostSellingProductsRv.adapter = mostSellingProductsAdapter
@@ -84,8 +86,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         categoryProductsAdapter.openProductDetails = {
             navigateToProductDetailsFragment(it)
         }
-//        binding.categoryNameTv.text = getString(R.string.electronics)
-//        categoryProductsAdapter.bindProducts()
+        binding.categoryNameTv.text = getString(R.string.electronics)
+        // categoryProductsAdapter.bindProducts()
     }
 
     private fun navigateToProductDetailsFragment(product: Product) {
@@ -95,7 +97,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
     }
 
     private fun navigateToCategoriesFragment(category: Category) {
-//        val action = HomeFragmentDirections.actionHomeFragmentToCategoriesFragment(category)
-//        findNavController().navigate(action)
+        val action = HomeFragmentDirections.actionHomeFragmentToCategoriesFragment(category)
+        findNavController().navigate(action)
     }
 }

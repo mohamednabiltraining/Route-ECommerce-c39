@@ -18,7 +18,7 @@ import javax.inject.Inject
 class HomeFragmentViewModel @Inject constructor(
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getMostSoldProductsUseCase: GetMostSoldProductsUseCase,
-    private val getCategoryProducts: GetCategoryProductsUseCase,
+    private val getElectronicProducts: GetCategoryProductsUseCase,
 ) : BaseViewModel() {
     val categories = MutableLiveData<List<Category>?>()
     val products = MutableLiveData<List<Product>?>()
@@ -60,7 +60,7 @@ class HomeFragmentViewModel @Inject constructor(
 
     fun getCategoryProducts(category: Category) {
         viewModelScope.launch(Dispatchers.IO) {
-            getCategoryProducts.invoke(category)
+            getElectronicProducts.invoke(category.id ?: "")
                 .collect { resource ->
                     when (resource) {
                         is Resource.Success -> {

@@ -30,6 +30,7 @@ kotlinPlugin = "1.8.10"
 glide="4.16.0"
 viewpager2 = "1.0.0"
 touchimageview = "3.6"
+legacySupportV4 = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -65,6 +66,7 @@ ssp={group="com.intuit.ssp",name="ssp-android",version.ref="ssp"}
 sdp={group="com.intuit.sdp",name="sdp-android",version.ref="sdp"}
 picasso={group="com.squareup.picasso",name="picasso",version.ref="picasso"}
 touch-imageview = { module = "com.github.MikeOrtiz:TouchImageView", version.ref = "touchimageview" }
+androidx-legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", version.ref = "legacySupportV4" }
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

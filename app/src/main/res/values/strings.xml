@@ -53,4 +53,13 @@
     <string name="description">Description</string>
     <string name="size">Size</string>
     <string name="colors">Colors</string>
+    <string name="filter">Filter</string>
+    <string name="sort_by">Sort by</string>
+    <string name="price_low_to_high">Price: Low to High</string>
+    <string name="price_high_to_low">Price: High to Low</string>
+    <string name="customer_review">Customer Review</string>
+    <string name="cancel">Cancel</string>
+    <string name="show_result">Show result</string>
+    <string name="brands">Brands</string>
+    <string name="subcategories">Subcategories</string>
 </resources>

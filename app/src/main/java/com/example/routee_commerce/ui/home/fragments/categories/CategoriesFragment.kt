@@ -5,12 +5,14 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.example.routee_commerce.R
 import com.example.routee_commerce.base.BaseFragment
 import com.example.routee_commerce.databinding.FragmentCategoriesBinding
 import com.example.routee_commerce.ui.home.fragments.categories.adapters.CategoriesAdapter
 import com.example.routee_commerce.ui.home.fragments.categories.adapters.SubcategoriesAdapter
 import com.route.domain.models.Category
+import com.route.domain.models.Subcategory
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -18,6 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFragmentViewModel>() {
     private val categoriesAdapter = CategoriesAdapter()
     private val subcategoriesAdapter = SubcategoriesAdapter()
+    private val args: CategoriesFragmentArgs by navArgs()
 
     private val mViewModel: CategoriesFragmentViewModel by viewModels()
     override fun initViewModel(): CategoriesFragmentViewModel {
@@ -30,19 +33,25 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
         observeData()
+        initViews()
         viewModel.getCategories()
     }
 
     private fun observeData() {
         viewModel.categoriesList.observe(viewLifecycleOwner) { catList ->
-            catList?.let {
-                showSuccessView(it)
+            catList?.let { categoriesList ->
+                if (args.category != null) {
+                    val startCategoryPosition = categoriesList.indexOf(args.category)
+                    categoriesAdapter.selectedPosition = startCategoryPosition
+                    showSuccessView(categoriesList, startCategoryPosition)
+                } else {
+                    showSuccessView(categoriesList, 0)
+                }
             }
         }
-        viewModel.subcategoriesList.observe(viewLifecycleOwner) { subcatList ->
-            subcatList?.let {
+        viewModel.subcategoriesList.observe(viewLifecycleOwner) { subcategoryList ->
+            subcategoryList?.let {
                 subcategoriesAdapter.bindSubcategories(it)
             }
         }
@@ -75,14 +84,36 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
 
     private fun navToProductsList(category: Category) {
         val action =
-            CategoriesFragmentDirections.actionCategoriesFragmentToProductListFragment(category)
+            CategoriesFragmentDirections.actionCategoriesFragmentToProductListFragment(
+                category.id ?: "",
+            )
         findNavController().navigate(action)
     }
 
     private fun initViews() {
-        binding.categoriesRv.adapter = categoriesAdapter
-        binding.subcategoryRv.adapter = subcategoriesAdapter
+        initCategoriesAdapter()
+        initSubcategoriesAdapter()
 //        subcategoriesAdapter.bindSubcategories() with subcategories of the first category in categories list
+    }
+
+    private fun initSubcategoriesAdapter() {
+        binding.subcategoryRv.adapter = subcategoriesAdapter
+        subcategoriesAdapter.subcategoryClicked = { _, subcategory ->
+            navigateToProductListFragment(subcategory)
+        }
+    }
+
+    private fun navigateToProductListFragment(subcategory: Subcategory) {
+        val action =
+            CategoriesFragmentDirections.actionCategoriesFragmentToProductListFragment(
+                subcategory.category ?: "",
+                subcategory.id,
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun initCategoriesAdapter() {
+        binding.categoriesRv.adapter = categoriesAdapter
         categoriesAdapter.categoryClicked = { _, category ->
             initCategoryCard(category)
             // LoadSubCategories
@@ -98,14 +129,15 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
         binding.successView.isVisible = false
     }
 
-    private fun showSuccessView(categories: List<Category?>) {
+    private fun showSuccessView(categories: List<Category?>, startCategoryPosition: Int) {
         categoriesAdapter.bindCategories(categories)
         binding.successView.isVisible = true
         binding.errorView.isVisible = false
         binding.categoriesShimmerViewContainer.isVisible = false
         binding.categoriesShimmerViewContainer.stopShimmer()
-        initCategoryCard(categories[0])
-        categories[0]?.let {
+        binding.categoriesRv.scrollToPosition(startCategoryPosition)
+        initCategoryCard(categories[startCategoryPosition])
+        categories[startCategoryPosition]?.let {
             // LoadSubCategories
             viewModel.getSubcategories(it)
         }

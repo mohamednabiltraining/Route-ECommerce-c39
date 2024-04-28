@@ -86,6 +86,7 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     implementation(libs.hilt.android.v25)
+    implementation(libs.androidx.legacy.support.v4)
     kapt(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)

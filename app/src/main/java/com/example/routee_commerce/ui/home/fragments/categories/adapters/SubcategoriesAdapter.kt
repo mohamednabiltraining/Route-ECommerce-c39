@@ -1,5 +1,6 @@
 package com.example.routee_commerce.ui.home.fragments.categories.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -39,8 +40,9 @@ class SubcategoriesAdapter(private var subcategories: List<Subcategory?>? = null
         }
     }
 
-    fun bindSubcategories(Subcategories: List<Subcategory?>) {
-        this.subcategories = Subcategories
+    @SuppressLint("NotifyDataSetChanged")
+    fun bindSubcategories(subcategories: List<Subcategory?>) {
+        this.subcategories = subcategories
         notifyDataSetChanged()
     }
 

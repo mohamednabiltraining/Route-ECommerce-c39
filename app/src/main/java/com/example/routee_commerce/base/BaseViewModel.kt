@@ -9,39 +9,42 @@ open class BaseViewModel : ViewModel() {
     val viewMessage = MutableLiveData<ViewMessage>()
     val showLoading = MutableLiveData<Boolean>()
 
-    fun <T> handleResource(resource:Resource<T>){
-        when(resource){
-            is Resource.Loading->{
+    fun <T> handleResource(resource: Resource<T>) {
+        when (resource) {
+            is Resource.Loading -> {
                 // show Loading
                 showLoading.postValue(true)
             }
-            is Resource.ServerFail ->{
+
+            is Resource.ServerFail -> {
                 viewMessage.postValue(
                     ViewMessage(
-                        message = resource.error.message?:"Something went wrong"
-                    )
+                        message = resource.error.message ?: "Something went wrong",
+                    ),
                 )
             }
-            is Resource.Fail ->{
-                when(resource.exception){
-                    is InternetConnectionError ->{
+
+            is Resource.Fail -> {
+                when (resource.exception) {
+                    is InternetConnectionError -> {
                         viewMessage.postValue(
                             ViewMessage(
-                                message = "Please check your internet connection"
-                            )
+                                message = "Please check your internet connection",
+                            ),
                         )
                     }
-                    else -> {
-                    viewMessage.postValue(
-                        ViewMessage(
-                            message = resource.exception.message?:"Something went wrong"
-                        )
-                    )
-                }
-                }
 
+                    else -> {
+                        viewMessage.postValue(
+                            ViewMessage(
+                                message = resource.exception.message ?: "Something went wrong",
+                            ),
+                        )
+                    }
+                }
             }
-            else ->{}
+
+            else -> {}
         }
     }
 }
