@@ -16,13 +16,14 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_product_details">
 
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@id/add_product_section"
             app:layout_constraintTop_toTopOf="parent">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -328,52 +329,59 @@
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/item_colors" />
                 </LinearLayout>
-
-                <TextView
-                    style="@style/HeaderText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/total_price"
-                    android:textColor="@color/dark_blue60"
-                    app:layout_constraintBottom_toTopOf="@id/total_price"
-                    app:layout_constraintStart_toStartOf="@id/total_price" />
-
-                <TextView
-                    android:id="@+id/total_price"
-                    style="@style/HeaderText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="78dp"
-                    android:textColor="@color/dark_blue"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/section_color"
-                    tools:text="EGP 5,750" />
-
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/add_to_cart"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    android:backgroundTint="@color/blue"
-                    app:cardCornerRadius="20dp"
-                    app:layout_constraintBottom_toBottomOf="@id/total_price"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/total_price">
-
-                    <TextView
-                        style="@style/ButtonText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="32dp"
-                        android:layout_marginVertical="11dp"
-                        android:drawablePadding="24dp"
-                        android:text="@string/add_to_cart"
-                        android:textColor="@color/white"
-                        app:drawableStartCompat="@drawable/ic_shoppingcart"
-                        app:drawableTint="@color/white" />
-                </com.google.android.material.card.MaterialCardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/add_product_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <TextView
+                style="@style/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_price"
+                android:textColor="@color/dark_blue60"
+                app:layout_constraintBottom_toTopOf="@id/total_price"
+                app:layout_constraintStart_toStartOf="@id/total_price" />
+
+            <TextView
+                android:id="@+id/total_price"
+                style="@style/HeaderText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="22dp"
+                android:textColor="@color/dark_blue"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:text="EGP 5,750" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/add_to_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                android:backgroundTint="@color/blue"
+                app:cardCornerRadius="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/total_price"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/total_price">
+
+                <TextView
+                    style="@style/ButtonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginVertical="11dp"
+                    android:drawablePadding="24dp"
+                    android:text="@string/add_to_cart"
+                    android:textColor="@color/white"
+                    app:drawableStartCompat="@drawable/ic_shoppingcart"
+                    app:drawableTint="@color/white" />
+            </com.google.android.material.card.MaterialCardView>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
