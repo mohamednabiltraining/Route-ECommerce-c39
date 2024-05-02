@@ -2,9 +2,12 @@ package com.example.routee_commerce.ui.home.fragments.home
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.routee_commerce.Constants.PRODUCT
 import com.example.routee_commerce.R
@@ -16,6 +19,7 @@ import com.example.routee_commerce.ui.productDetails.ProductDetailsActivity
 import com.route.domain.models.Category
 import com.route.domain.models.Product
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() {
@@ -23,9 +27,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
     private val mostSellingProductsAdapter = ProductsAdapter()
     private val categoryProductsAdapter = ProductsAdapter()
 
-    private val mViewModel: HomeFragmentViewModel by viewModels()
+    private val mViewModel: HomeContract.ViewModel by viewModels<HomeFragmentViewModel>()
     override fun initViewModel(): HomeFragmentViewModel {
-        return mViewModel
+        return mViewModel as HomeFragmentViewModel
     }
 
     override fun getLayoutId(): Int {
@@ -36,45 +40,66 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         super.onViewCreated(view, savedInstanceState)
         initViews()
         observeLiveData()
-        viewModel.getCategories()
-        viewModel.getProducts()
+        viewModel.doAction(HomeContract.Action.InitPage)
     }
 
     private fun observeLiveData() {
-        viewModel.categories.observe(viewLifecycleOwner) {
-            it?.let {
-                binding.categoriesShimmerViewContainer.isGone = true
-                categoriesAdapter.bindCategories(it)
-            }
-        }
-        viewModel.products.observe(viewLifecycleOwner) {
-            it?.let { productsList ->
-                binding.mostSellingProductsShimmerViewContainer.isGone = true
-                mostSellingProductsAdapter.bindProducts(productsList)
-            }
-        }
-        viewModel.categoryProducts.observe(viewLifecycleOwner) {
-            it?.let {
-                binding.categoryProductsShimmerViewContainer.isGone = true
-                categoryProductsAdapter.bindProducts(it)
-                binding.emptyCategoryMessage.isGone = it.isNotEmpty()
-                binding.categoryProductsRv.visibility = View.VISIBLE
+        viewModel.event.observe(viewLifecycleOwner, ::onEventChange)
+        lifecycleScope.launch {
+            viewModel.state.collect {
+                renderViewState(it)
             }
         }
     }
 
+    private fun onEventChange(event: HomeContract.Event) {
+        when (event) {
+            is HomeContract.Event.ShowMessage -> {
+                Log.e("Message->", event.viewMessage.message)
+                showErrorView(event.viewMessage.message)
+            }
+        }
+    }
+
+    private fun renderViewState(state: HomeContract.State) {
+        when (state) {
+            is HomeContract.State.Loading -> {
+                Log.e("log->", "Loading")
+                showLoadingShimmer()
+            }
+
+            is HomeContract.State.Success -> {
+                binding.errorView.isGone = true
+                binding.successView.isVisible = true
+                state.categories?.let {
+                    binding.categoriesShimmerViewContainer.isGone = true
+                    categoriesAdapter.bindCategories(it)
+                }
+
+                state.mostSellingProduct?.let {
+                    binding.mostSellingProductsShimmerViewContainer.isGone = true
+                    mostSellingProductsAdapter.bindProducts(it)
+                }
+
+                state.electronicProducts?.let {
+                    binding.categoryProductsShimmerViewContainer.isGone = true
+                    categoryProductsAdapter.bindProducts(it)
+                    binding.emptyCategoryMessage.isGone = it.isNotEmpty()
+                    binding.categoryProductsRv.visibility = View.VISIBLE
+                }
+            }
+        }
+    }
+
+    private fun showLoadingShimmer() {
+        binding.mostSellingProductsShimmerViewContainer.isVisible = true
+        binding.categoriesShimmerViewContainer.isVisible = true
+        binding.categoryProductsShimmerViewContainer.isVisible = true
+        binding.errorView.isGone = true
+    }
+
     private fun initViews() {
-        /*categoriesAdapter.categoryClicked = { position, category ->
-            navigateToCategoriesFragment(category)
-            binding.categoryNameTv.text = category.name
-            viewModel.getCategoryProducts(category)
-        }*/
         categoriesAdapter.setOnCategoryClickListener { category ->
-            /*binding.categoryNameTv.text = category.name
-            binding.categoryProductsShimmerViewContainer.isGone = false
-            binding.emptyCategoryMessage.isGone = true
-            binding.categoryProductsRv.visibility = View.INVISIBLE
-            viewModel.getCategoryProducts(category)*/
             navigateToCategoriesFragment(category)
         }
         binding.categoriesRv.adapter = categoriesAdapter
@@ -88,6 +113,17 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         }
         binding.categoryNameTv.text = getString(R.string.electronics)
         // categoryProductsAdapter.bindProducts()
+    }
+
+    private fun showErrorView(message: String) {
+        binding.errorView.isGone = false
+        binding.successView.isGone = true
+        binding.errorMessage.text = message
+        binding.tryAgainBtn.setOnClickListener {
+            // LoadPage
+            showLoadingShimmer()
+            viewModel.doAction(HomeContract.Action.InitPage)
+        }
     }
 
     private fun navigateToProductDetailsFragment(product: Product) {

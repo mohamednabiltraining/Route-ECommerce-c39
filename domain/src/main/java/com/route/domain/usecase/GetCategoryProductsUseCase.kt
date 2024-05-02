@@ -9,7 +9,9 @@ import javax.inject.Inject
 class GetCategoryProductsUseCase @Inject constructor(
     private val productsRepository: ProductsRepository,
 ) {
-    suspend fun invoke(categoryId: String): Flow<Resource<List<Product>?>> {
-        return productsRepository.getCategoryProducts(categoryId)
+    suspend operator fun invoke(categoryId: String): Flow<Resource<List<Product>?>> {
+        return productsRepository.getProducts(
+            categoryId = categoryId,
+        )
     }
 }

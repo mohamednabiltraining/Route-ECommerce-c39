@@ -62,4 +62,5 @@
     <string name="show_result">Show result</string>
     <string name="brands">Brands</string>
     <string name="subcategories">Subcategories</string>
+    <string name="subcategory_filter">Subcategory: %1$s</string>
 </resources>

@@ -20,14 +20,12 @@ interface WebServices {
     suspend fun getCategories(): Response<List<CategoryDto?>?>
 
     @GET("/api/v1/products")
-    suspend fun getMostSoldProducts(
-        @Query("limit") limit: Int = 5,
-        @Query("sort") sort: String = SOLD_SORT,
-    ): Response<List<ProductDto?>?>
-
-    @GET("/api/v1/products")
-    suspend fun getCategoryProducts(
-        @Query("category[in]") categoryID: String,
+    suspend fun getProducts(
+        @Query("limit") limit: Int? = null,
+        @Query("sort") sort: String? = null,
+        @Query("category[in]") categoryID: String? = null,
+        @Query("brand") brand: String? = null,
+        @Query("keyword") q: String? = null,
     ): Response<List<ProductDto?>?>
 
     @GET("api/v1/subcategories")
@@ -42,8 +40,4 @@ interface WebServices {
         @Field("rePassword") rePassword: String,
         @Field("phone") phone: String,
     ): AuthResponse
-}
-
-enum class ProductsPrams(val value: String) {
-    SORT_BY_SOLD("-sold"),
 }

@@ -9,7 +9,7 @@ import javax.inject.Inject
 class GetCategoriesUseCase @Inject constructor(
     private val categoriesRepository: CategoriesRepository,
 ) {
-    suspend fun invoke(): Flow<Resource<List<Category>?>> {
+    suspend operator fun invoke(): Flow<Resource<List<Category>?>> {
         return categoriesRepository.getAllCategories()
     }
 }

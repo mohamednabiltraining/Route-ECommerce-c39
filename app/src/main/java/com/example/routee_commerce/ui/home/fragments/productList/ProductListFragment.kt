@@ -3,8 +3,10 @@ package com.example.routee_commerce.ui.home.fragments.productList
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.routee_commerce.Constants.PRODUCT
 import com.example.routee_commerce.R
@@ -12,6 +14,7 @@ import com.example.routee_commerce.base.BaseFragment
 import com.example.routee_commerce.databinding.FragmentProductListBinding
 import com.example.routee_commerce.ui.home.fragments.productList.adapter.ProductsAdapter
 import com.example.routee_commerce.ui.productDetails.ProductDetailsActivity
+import com.route.domain.models.Brand
 import com.route.domain.models.Product
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,6 +36,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
     private val args: ProductListFragmentArgs by navArgs()
     private val productsAdapter = ProductsAdapter()
     lateinit var searchKeyWord: String
+    private lateinit var brandsList: List<Brand>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,7 +45,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         showLoadingView()
         initView()
         observeData()
-        viewModel.getCategoryProducts(args.categoryId)
+        viewModel.getCategoryProducts(args.categoryId, args.subcategory?.id)
     }
 
     private fun observeData() {
@@ -53,6 +57,9 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         viewModel.viewMessage.observe(viewLifecycleOwner) {
             showErrorView(it.message)
         }
+        viewModel.allProductBrands.observe(viewLifecycleOwner) {
+            setAllProductsBrand(it)
+        }
     }
 
     private fun initView() {
@@ -60,6 +67,31 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         productsAdapter.openProductDetails = {
             navigateToProductDetails(it)
         }
+        if (args.subcategory != null) {
+            binding.filtersSv.isVisible = true
+            binding.subcategoriesFilter.isVisible = true
+            binding.subcategory.text =
+                getString(R.string.subcategory_filter, args.subcategory?.name)
+        }
+        binding.cancelSubcategory.setOnClickListener {
+            binding.subcategoriesFilter.isGone = true
+            viewModel.getCategoryProducts(args.categoryId, null)
+        }
+        binding.btnFilter.setOnClickListener {
+            navigateToFilter()
+        }
+    }
+
+    private fun navigateToFilter() {
+        val action =
+            ProductListFragmentDirections.actionProductListFragmentToFiltrationFragment(
+                brands = brandsList.toTypedArray(),
+            )
+        findNavController().navigate(action)
+    }
+
+    private fun setAllProductsBrand(brands: List<Brand>) {
+        brandsList = brands
     }
 
     private fun showLoadingView() {
@@ -91,7 +123,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         binding.errorMessage.text = message
         binding.tryAgainBtn.setOnClickListener {
 //            SearchForProducts(searchKeyWord)
-            viewModel.getCategoryProducts(args.categoryId)
+            viewModel.getCategoryProducts(args.categoryId, args.subcategory?.id)
         }
     }
 

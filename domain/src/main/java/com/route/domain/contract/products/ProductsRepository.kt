@@ -5,6 +5,11 @@ import com.route.domain.models.Product
 import kotlinx.coroutines.flow.Flow
 
 interface ProductsRepository {
-    suspend fun getAllProducts(): Flow<Resource<List<Product>?>>
-    suspend fun getCategoryProducts(categoryId: String): Flow<Resource<List<Product>?>>
+    suspend fun getProducts(
+        limit: Int? = null,
+        sortBy: SortBy? = null,
+        categoryId: String? = null,
+        brandId: String? = null,
+        keyword: String? = null,
+    ): Flow<Resource<List<Product>?>>
 }

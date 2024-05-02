@@ -32,7 +32,7 @@ class CategoriesFragmentViewModel @Inject constructor(
                         }
 
                         else -> {
-                            handleResource(response)
+                            extractViewMessage(response)
                         }
                     }
                 }
@@ -52,7 +52,7 @@ class CategoriesFragmentViewModel @Inject constructor(
                         }
 
                         else -> {
-                            handleResource(response)
+                            extractViewMessage(response)
                         }
                     }
                 }

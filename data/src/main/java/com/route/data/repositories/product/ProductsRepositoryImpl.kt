@@ -4,6 +4,7 @@ import com.route.data.contract.products.ProductsOnlineDataSource
 import com.route.data.toFlow
 import com.route.domain.common.Resource
 import com.route.domain.contract.products.ProductsRepository
+import com.route.domain.contract.products.SortBy
 import com.route.domain.models.Product
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -11,15 +12,15 @@ import javax.inject.Inject
 class ProductsRepositoryImpl @Inject constructor(
     private val productsOnlineDataSource: ProductsOnlineDataSource,
 ) : ProductsRepository {
-    override suspend fun getAllProducts(): Flow<Resource<List<Product>?>> {
+    override suspend fun getProducts(
+        limit: Int?,
+        sortBy: SortBy?,
+        categoryId: String?,
+        brandId: String?,
+        keyword: String?,
+    ): Flow<Resource<List<Product>?>> {
         return toFlow {
-            productsOnlineDataSource.getAllProducts()
-        }
-    }
-
-    override suspend fun getCategoryProducts(categoryId: String): Flow<Resource<List<Product>?>> {
-        return toFlow {
-            productsOnlineDataSource.getCategoryProducts(categoryId)
+            productsOnlineDataSource.getProducts(limit, sortBy, categoryId, brandId, keyword)
         }
     }
 }

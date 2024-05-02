@@ -30,9 +30,7 @@
             app:nullable="true" />
         <action
             android:id="@+id/action_categoriesFragment_to_productListFragment"
-            app:destination="@id/productListFragment"
-            app:popUpTo="@id/categoriesFragment"
-            app:popUpToSaveState="true" />
+            app:destination="@id/productListFragment" />
     </fragment>
     <fragment
         android:id="@+id/productListFragment"
@@ -43,10 +41,13 @@
             android:name="categoryId"
             app:argType="string" />
         <argument
-            android:name="subcategoryId"
+            android:name="subcategory"
             android:defaultValue="@null"
-            app:argType="string"
+            app:argType="com.route.domain.models.Subcategory"
             app:nullable="true" />
+        <action
+            android:id="@+id/action_productListFragment_to_filtrationFragment"
+            app:destination="@id/filtrationFragment" />
     </fragment>
     <fragment
         android:id="@+id/wishListFragment"
@@ -58,4 +59,19 @@
         android:name="com.example.routee_commerce.ui.home.fragments.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/filtrationFragment"
+        android:name="com.example.routee_commerce.ui.home.fragments.filter.FiltrationFragment"
+        android:label="fragment_filtration"
+        tools:layout="@layout/fragment_filtration">
+        <action
+            android:id="@+id/action_filtrationFragment_to_productListFragment"
+            app:destination="@id/productListFragment" />
+        <argument
+            android:name="brands"
+            app:argType="com.route.domain.models.Brand[]" />
+        <!--<argument
+            android:name="subcategories"
+            app:argType="com.route.domain.models.Subcategory[]" />-->
+    </fragment>
 </navigation>

@@ -77,15 +77,16 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
         binding.selectedCategoryName.text = category?.name
         binding.shopNowBtn.setOnClickListener {
             if (category != null) {
-                navToProductsList(category)
+                navToProductsList(category.id ?: "", null)
             }
         }
     }
 
-    private fun navToProductsList(category: Category) {
+    private fun navToProductsList(categoryId: String, subcategory: Subcategory?) {
         val action =
             CategoriesFragmentDirections.actionCategoriesFragmentToProductListFragment(
-                category.id ?: "",
+                categoryId,
+                subcategory,
             )
         findNavController().navigate(action)
     }
@@ -99,17 +100,8 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
     private fun initSubcategoriesAdapter() {
         binding.subcategoryRv.adapter = subcategoriesAdapter
         subcategoriesAdapter.subcategoryClicked = { _, subcategory ->
-            navigateToProductListFragment(subcategory)
+            navToProductsList(subcategory.category ?: "", subcategory)
         }
-    }
-
-    private fun navigateToProductListFragment(subcategory: Subcategory) {
-        val action =
-            CategoriesFragmentDirections.actionCategoriesFragmentToProductListFragment(
-                subcategory.category ?: "",
-                subcategory.id,
-            )
-        findNavController().navigate(action)
     }
 
     private fun initCategoriesAdapter() {
