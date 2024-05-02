@@ -69,8 +69,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
             }
 
             is HomeContract.State.Success -> {
-                binding.errorView.isGone = true
-                binding.successView.isVisible = true
+                Log.wtf("Loading->", "WTF_Loading???!!")
+                showSuccess()
                 state.categories?.let {
                     binding.categoriesShimmerViewContainer.isGone = true
                     categoriesAdapter.bindCategories(it)
@@ -89,6 +89,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
                 }
             }
         }
+    }
+
+    private fun showSuccess() {
+        binding.errorView.isGone = true
+        binding.categoriesShimmerViewContainer.isVisible = false
+        binding.mostSellingProductsShimmerViewContainer.isVisible = false
+        binding.categoryProductsShimmerViewContainer.isVisible = false
     }
 
     private fun showLoadingShimmer() {

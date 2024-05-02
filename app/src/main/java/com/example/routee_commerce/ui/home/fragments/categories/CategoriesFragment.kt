@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.example.routee_commerce.R
@@ -15,6 +16,7 @@ import com.route.domain.models.Category
 import com.route.domain.models.Subcategory
 import com.squareup.picasso.Picasso
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFragmentViewModel>() {
@@ -35,36 +37,41 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
         super.onViewCreated(view, savedInstanceState)
         observeData()
         initViews()
-        viewModel.getCategories()
+        viewModel.doAction(CategoryContract.Action.InitCategoryList)
     }
 
     private fun observeData() {
-        viewModel.categoriesList.observe(viewLifecycleOwner) { catList ->
-            catList?.let { categoriesList ->
-                if (args.category != null) {
-                    val startCategoryPosition = categoriesList.indexOf(args.category)
-                    categoriesAdapter.selectedPosition = startCategoryPosition
-                    showSuccessView(categoriesList, startCategoryPosition)
-                } else {
-                    showSuccessView(categoriesList, 0)
+        viewModel.event.observe(viewLifecycleOwner) {
+            when (it) {
+                is CategoryContract.Event.ShowMessage -> {
+                    showErrorView(it.message.message)
                 }
             }
         }
-        viewModel.subcategoriesList.observe(viewLifecycleOwner) { subcategoryList ->
-            subcategoryList?.let {
-                subcategoriesAdapter.bindSubcategories(it)
+        lifecycleScope.launch {
+            viewModel.state.collect {
+                when (it) {
+                    CategoryContract.State.Loading -> {
+                        showLoadingView()
+                    }
+
+                    is CategoryContract.State.Success -> {
+                        it.categoriesList?.let { categoriesList ->
+                            if (args.category != null) {
+                                val startCategoryPosition = categoriesList.indexOf(args.category)
+                                categoriesAdapter.selectedPosition = startCategoryPosition
+                                showSuccessView(categoriesList, startCategoryPosition)
+                            } else {
+                                showSuccessView(categoriesList, 0)
+                            }
+                        }
+
+                        it.subcategoriesList?.let { subcategoryList ->
+                            subcategoriesAdapter.bindSubcategories(subcategoryList)
+                        }
+                    }
+                }
             }
-        }
-        viewModel.viewMessage.observe(viewLifecycleOwner) { message ->
-            showErrorView(message.message)
-        }
-        viewModel.showLoading.observe(viewLifecycleOwner) { isLoading ->
-            /* when (isLoading) {
-                 true -> {
-                     showLoadingView()
-                 }
-                 else -> {}
-             }*/
         }
     }
 
@@ -110,7 +117,7 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
             initCategoryCard(category)
             // LoadSubCategories
             categoriesAdapter.selectItemOfCategory(category)
-            viewModel.getSubcategories(category)
+            viewModel.doAction(CategoryContract.Action.InitSubcategoryList(category.id ?: ""))
         }
     }
 
@@ -131,7 +138,7 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
         initCategoryCard(categories[startCategoryPosition])
         categories[startCategoryPosition]?.let {
             // LoadSubCategories
-            viewModel.getSubcategories(it)
+            viewModel.doAction(CategoryContract.Action.InitSubcategoryList(it.id ?: ""))
         }
     }
 
@@ -144,7 +151,7 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
         binding.errorMessage.text = message
         binding.tryAgainBtn.setOnClickListener {
             // LoadCategories
-            viewModel.getCategories()
+            viewModel.doAction(CategoryContract.Action.InitCategoryList)
         }
     }
 
