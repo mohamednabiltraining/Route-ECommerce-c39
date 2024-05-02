@@ -70,7 +70,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
 
             is HomeContract.State.Success -> {
                 Log.wtf("Loading->", "WTF_Loading???!!")
-                showSuccess()
+                // showSuccess()
                 state.categories?.let {
                     binding.categoriesShimmerViewContainer.isGone = true
                     categoriesAdapter.bindCategories(it)
