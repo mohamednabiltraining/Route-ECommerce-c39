@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.routee_commerce.ui.home.fragments.home.HomeFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/categoriesFragment"
-        android:name="com.example.routee_commerce.ui.home.fragments.categories.CategoriesFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.categories.CategoriesFragment"
         android:label="CategoriesFragment"
         tools:layout="@layout/fragment_categories">
         <argument
@@ -34,7 +34,7 @@
     </fragment>
     <fragment
         android:id="@+id/productListFragment"
-        android:name="com.example.routee_commerce.ui.home.fragments.productList.ProductListFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.productList.ProductListFragment"
         android:label="ProductListFragment"
         tools:layout="@layout/fragment_product_list">
         <argument
@@ -48,20 +48,32 @@
         <action
             android:id="@+id/action_productListFragment_to_filtrationFragment"
             app:destination="@id/filtrationFragment" />
+        <argument
+            android:name="subcategoriesList"
+            app:argType="com.route.domain.models.Subcategory[]" />
+        <argument
+            android:name="brand"
+            android:defaultValue="@null"
+            app:argType="com.route.domain.models.Brand"
+            app:nullable="true" />
+        <argument
+            android:name="sortBy"
+            android:defaultValue="NON_SORTED"
+            app:argType="com.route.domain.contract.products.SortBy" />
     </fragment>
     <fragment
         android:id="@+id/wishListFragment"
-        android:name="com.example.routee_commerce.ui.home.fragments.wishlist.WishListFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.wishlist.WishListFragment"
         android:label="fragment_wishlist"
         tools:layout="@layout/fragment_wishlist" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.example.routee_commerce.ui.home.fragments.profile.ProfileFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/filtrationFragment"
-        android:name="com.example.routee_commerce.ui.home.fragments.filter.FiltrationFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.filter.FiltrationFragment"
         android:label="fragment_filtration"
         tools:layout="@layout/fragment_filtration">
         <action
@@ -70,8 +82,11 @@
         <argument
             android:name="brands"
             app:argType="com.route.domain.models.Brand[]" />
-        <!--<argument
+        <argument
             android:name="subcategories"
-            app:argType="com.route.domain.models.Subcategory[]" />-->
+            app:argType="com.route.domain.models.Subcategory[]" />
+        <argument
+            android:name="categoryId"
+            app:argType="string" />
     </fragment>
 </navigation>

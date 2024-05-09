@@ -12,10 +12,6 @@ import retrofit2.http.POST
 import retrofit2.http.Query
 
 interface WebServices {
-    companion object {
-        private const val SOLD_SORT = "-sold"
-    }
-
     @GET("/api/v1/categories")
     suspend fun getCategories(): Response<List<CategoryDto?>?>
 
@@ -39,5 +35,12 @@ interface WebServices {
         @Field("password") password: String,
         @Field("rePassword") rePassword: String,
         @Field("phone") phone: String,
+    ): AuthResponse
+
+    @FormUrlEncoded
+    @POST("/api/v1/auth/signin")
+    suspend fun signIn(
+        @Field("email") email: String,
+        @Field("password") password: String,
     ): AuthResponse
 }

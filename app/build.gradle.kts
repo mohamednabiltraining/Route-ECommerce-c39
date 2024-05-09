@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.routee_commerce"
+    namespace = "com.example.routeEcommerce"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.routee_commerce"
+        applicationId = "com.example.routeEcommerce"
         minSdk = 24
         targetSdk = 34
         versionCode = 1

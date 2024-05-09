@@ -5,165 +5,199 @@
 
     <data>
 
+        <variable
+            name="vm"
+            type="com.example.routeEcommerce.ui.userAuthentication.fragments.register.RegisterViewModel" />
     </data>
 
-    <ScrollView
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_outside"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/blue"
+        tools:context=".ui.userAuthentication.fragments.register.RegisterFragment">
 
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constraint_outside"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/blue"
-            tools:context=".ui.userAuthentication.fragments.register.RegisterFragment">
+            android:layout_height="match_parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_margin="15dp"
                 android:gravity="center_horizontal"
-                android:orientation="vertical"
-                tools:layout_editor_absoluteX="-96dp"
-                tools:layout_editor_absoluteY="73dp">
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="350dp"
                     android:layout_height="140dp"
                     android:layout_marginVertical="30dp"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/logo_white" />
 
-                <TextView
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/user_name_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/full_name"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/user_name_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/enter_your_full_name"
-                    android:inputType="text"
+                    android:hint="@string/full_name"
                     android:maxLength="30"
                     android:maxLines="1"
                     android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
+                    android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    app:boxStrokeColor="@color/selector_outlined_et"
+                    app:errorEnabled="true"
+                    app:errorMessage="@{vm.usernameErrorLiveData}"
+                    app:startIconDrawable="@drawable/ic_person">
 
-                <TextView
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/user_name_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/enter_your_full_name"
+                        android:fontFamily="@font/poppins_regular"
+                        android:inputType="text"
+                        android:text="@={vm.usernameLiveData}"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phone_number_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/mobile_number"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-
-                <EditText
-                    android:id="@+id/phone_number_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/enter_your_mobile_number"
-                    android:inputType="phone"
+                    android:hint="@string/mobile_number"
                     android:maxLength="11"
                     android:maxLines="1"
                     android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
+                    android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    app:boxStrokeColor="@color/selector_outlined_et"
+                    app:errorEnabled="true"
+                    app:errorMessage="@{vm.phoneErrorLiveData}"
+                    app:prefixText="+20 "
+                    app:startIconDrawable="@drawable/ic_phone">
 
-                <TextView
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/phone_number_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/enter_your_mobile_number"
+                        android:fontFamily="@font/poppins_regular"
+                        android:inputType="phone"
+                        android:text="@={vm.phoneLiveData}"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/email_address"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/email_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/enter_your_email"
-                    android:inputType="textEmailAddress"
+                    android:hint="@string/email_address"
                     android:maxLength="40"
                     android:maxLines="1"
                     android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
+                    android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    app:boxStrokeColor="@color/selector_outlined_et"
+                    app:errorEnabled="true"
+                    app:errorMessage="@{vm.emailErrorLiveData}"
+                    app:startIconDrawable="@drawable/ic_email">
 
-                <TextView
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/enter_your_email"
+                        android:fontFamily="@font/poppins_regular"
+                        android:inputType="textEmailAddress"
+                        android:text="@={vm.emailLiveData}"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/password"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                    android:layout_marginBottom="32dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
 
-                <EditText
-                    android:id="@+id/password_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/enter_your_password"
-                    android:inputType="textPassword"
-                    android:maxLength="40"
-                    android:maxLines="1"
-                    android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/password_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_rounded"
+                        android:hint="@string/password"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:padding="8dp"
+                        android:textColorHint="@color/gray_110"
+                        app:boxStrokeColor="@color/selector_outlined_et"
+                        app:endIconMode="password_toggle"
+                        app:errorEnabled="true"
+                        app:errorMessage="@{vm.passwordErrorLiveData}"
+                        app:startIconDrawable="@drawable/ic_lock">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/password_confirmation"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/password_edt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/enter_your_password"
+                            android:fontFamily="@font/poppins_regular"
+                            android:inputType="textPassword"
+                            android:text="@={vm.passwordLiveData}"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/password_confirmation_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="30dp"
-                    android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/password_confirmation"
-                    android:inputType="textPassword"
-                    android:maxLength="40"
-                    android:maxLines="1"
-                    android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
-                    android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/confirm_password_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/edit_text_rounded"
+                        android:hint="@string/password_confirmation"
+                        android:maxLength="40"
+                        android:maxLines="1"
+                        android:minLines="1"
+                        android:padding="8dp"
+                        android:textColorHint="@color/gray_110"
+                        app:boxStrokeColor="@color/selector_outlined_et"
+                        app:endIconMode="password_toggle"
+                        app:errorEnabled="true"
+                        app:errorMessage="@{vm.rePasswordErrorLiveData}">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/password_confirmation_edt"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:autofillHints="@string/password_confirmation"
+                            android:fontFamily="@font/poppins_regular"
+                            android:inputType="textPassword"
+                            android:text="@={vm.rePasswordLiveData}"
+                            android:textColor="@color/black"
+                            android:textSize="14sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/login_do_have_account_tv"
@@ -203,6 +237,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="30dp"
+                        android:importantForAccessibility="no"
                         android:src="@drawable/ic_next"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -221,6 +256,6 @@
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </LinearLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+        </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -11,7 +11,7 @@
 
         <variable
             name="vm"
-            type="com.example.routee_commerce.ui.productDetails.ProductDetailsViewModel" />
+            type="com.example.routeEcommerce.ui.productDetails.ProductDetailsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

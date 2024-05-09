@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.routee_commerce.ui.userAuthentication.fragments.login.LoginFragment"
+        android:name="com.example.routeEcommerce.ui.userAuthentication.fragments.login.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -20,11 +20,11 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.routee_commerce.ui.userAuthentication.fragments.register.RegisterFragment"
+        android:name="com.example.routeEcommerce.ui.userAuthentication.fragments.register.RegisterFragment"
         android:label="fragment_register"
         tools:layout="@layout/fragment_register">
         <action
-            android:id="@+id/action_registerFragment_to_loginFragment3"
+            android:id="@+id/action_registerFragment_to_loginFragment"
             app:destination="@id/loginFragment"
             app:enterAnim="@anim/from_right"
             app:exitAnim="@anim/to_left"

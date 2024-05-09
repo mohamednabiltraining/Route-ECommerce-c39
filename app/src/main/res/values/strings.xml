@@ -10,7 +10,7 @@
     <string name="your_full_name">Your full name</string>
     <string name="your_email">Your Email</string>
     <string name="your_password">Your Password</string>
-    <string name="password">**********</string>
+    <string name="password">Password</string>
     <string name="your_mobile_number">Your Mobile Number</string>
     <string name="your_address">Your Address</string>
     <string name="phone_num">01159732150</string>
@@ -40,7 +40,7 @@
     <string name="enter_your_mobile_number">Enter your mobile number</string>
     <string name="enter_your_password">Enter your password</string>
     <string name="enter_your_email">Enter your email</string>
-    <string name="password_confirmation">Password Confirmation</string>
+    <string name="password_confirmation">Confirm Password</string>
     <string name="welcome_Back_to_route">Welcome Back To Route</string>
     <string name="user">user</string>
     <string name="sign_in_with_your_mail">Please sign in with your mail</string>
@@ -63,4 +63,6 @@
     <string name="brands">Brands</string>
     <string name="subcategories">Subcategories</string>
     <string name="subcategory_filter">Subcategory: %1$s</string>
+    <string name="brandFilter">Brand: %1$s</string>
+    <string name="sort_by_filter">Sort by: %1$s</string>
 </resources>

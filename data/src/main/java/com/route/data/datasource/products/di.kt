@@ -1,6 +1,6 @@
 package com.route.data.datasource.products
 
-import com.route.data.contract.products.ProductsOnlineDataSource
+import com.route.data.contract.ProductsOnlineDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -10,7 +10,5 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 abstract class ProductsOnlineDataSourceModule {
     @Binds
-    abstract fun bindProducts(
-        impl: ProductsOnlineDataSourceImpl,
-    ): ProductsOnlineDataSource
+    abstract fun bindProducts(impl: ProductsOnlineDataSourceImpl): ProductsOnlineDataSource
 }

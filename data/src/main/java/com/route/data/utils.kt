@@ -48,6 +48,10 @@ suspend fun <T> toFlow(getData: suspend () -> T): Flow<Resource<T>> {
     }.flowOn(Dispatchers.IO)
         .catch { ex ->
             when (ex) {
+                is AuthError -> {
+                    emit(Resource.AuthFail(ex))
+                }
+
                 is ServerError -> {
                     emit(Resource.ServerFail(ex))
                 }
