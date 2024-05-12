@@ -3,8 +3,7 @@ package com.route.data.datasource.auth
 import com.route.data.api.WebServices
 import com.route.data.contract.AuthOnlineDataSource
 import com.route.data.executeAuth
-import com.route.domain.TokenEncryptionManager
-import com.route.domain.models.User
+import com.route.domain.models.AuthResponse
 import javax.inject.Inject
 
 class AuthOnlineDataSourceImpl
@@ -18,7 +17,7 @@ class AuthOnlineDataSourceImpl
             password: String,
             repeatPassword: String,
             phone: String,
-        ): User? {
+        ): AuthResponse {
             val response =
                 executeAuth {
                     webServices.signUp(
@@ -29,19 +28,21 @@ class AuthOnlineDataSourceImpl
                         phone,
                     )
                 }
-            TokenEncryptionManager().encryptToken(response.token)
-            return response.user?.toUser()
+            // TokenEncryptionManager().encryptToken(response.token)
+            val authResponse = AuthResponse(response.user?.toUser(), response.token)
+            return authResponse
         }
 
         override suspend fun signIn(
             email: String,
             password: String,
-        ): User? {
+        ): AuthResponse {
             val response =
                 executeAuth {
                     webServices.signIn(email, password)
                 }
-            TokenEncryptionManager().encryptToken(response.token)
-            return response.user?.toUser()
+            // TokenEncryptionManager().encryptToken(response.token)
+            val authResponse: AuthResponse = AuthResponse(response.user?.toUser(), response.token)
+            return authResponse
         }
     }

@@ -43,6 +43,8 @@ android {
         viewBinding = true
         dataBinding = true
     }
+    buildToolsVersion = "34.0.0"
+    ndkVersion = "25.1.8937393"
 }
 
 dependencies {
@@ -92,4 +94,5 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.security.crypto)
 }

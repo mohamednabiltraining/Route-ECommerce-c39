@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -25,24 +26,10 @@
         </activity>
         <activity
             android:name=".ui.userAuthentication.activity.UserAuthenticationActivity"
-            android:exported="false">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
-        </activity>
-
+            android:exported="false" />
         <activity
             android:name=".ui.home.activity.MainActivity"
             android:exported="false" />
-        <!--
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>-->
         <activity
             android:name=".ui.productDetails.ProductDetailsActivity"
             android:exported="false" />

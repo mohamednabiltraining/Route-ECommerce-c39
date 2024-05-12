@@ -1,5 +1,6 @@
 package com.route.data
 
+import android.util.Log
 import com.google.gson.Gson
 import com.route.data.api.model.Response
 import com.route.data.api.model.auth.AuthResponse
@@ -69,14 +70,15 @@ suspend fun <T> executeAuth(apiCall: suspend () -> T): T {
     try {
         return apiCall.invoke()
     } catch (ex: HttpException) {
-        if (ex.code() == 400) {
+        if (ex.code() == 401) {
             val serverResponse = ex.response()?.errorBody()?.string()
+            Log.e("serverResponse->", "$serverResponse")
             val errorResponse = Gson().fromJson(serverResponse, AuthResponse::class.java)
             throw AuthError(
-                errorResponse.error?.toError(),
+                errorResponse.message,
                 ex,
             )
-        } else if (ex.code() in 401..600) {
+        } else if (ex.code() in 402..600) {
             val serverResponse = ex.response()?.errorBody()?.string()
             val response = Gson().fromJson<Response<Any>>(serverResponse, Response::class.java)
             throw ServerError(

@@ -85,7 +85,8 @@ class TokenEncryptionManager {
         val encryptManager = TokenEncryptionManager()
         val tokenInByte = token.encodeToByteArray()
 
-        val file = File(Environment.getDataDirectory().parentFile, "secret.txt")
+        val file =
+            File(Environment.getExternalStorageDirectory(), "/" + File.separator + "secret.txt")
         if (!file.exists()) {
             file.createNewFile()
         }
@@ -97,7 +98,8 @@ class TokenEncryptionManager {
     }
 
     fun decryptToken(): String {
-        val file = File(Environment.getDataDirectory().parentFile, "secret.txt")
+        val file =
+            File(Environment.getExternalStorageDirectory(), "/" + File.separator + "secret.txt")
         return decrypt(
             FileInputStream(file),
         ).decodeToString()

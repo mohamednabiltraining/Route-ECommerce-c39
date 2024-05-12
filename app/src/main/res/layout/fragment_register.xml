@@ -50,8 +50,8 @@
                     android:padding="8dp"
                     android:textColorHint="@color/gray_110"
                     app:boxStrokeColor="@color/selector_outlined_et"
-                    app:errorEnabled="true"
-                    app:errorMessage="@{vm.usernameErrorLiveData}"
+                    app:errorEnabled="@{vm.usernameError == null ? false : true}"
+                    app:errorMessage="@{vm.usernameError}"
                     app:startIconDrawable="@drawable/ic_person">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -80,8 +80,8 @@
                     android:padding="8dp"
                     android:textColorHint="@color/gray_110"
                     app:boxStrokeColor="@color/selector_outlined_et"
-                    app:errorEnabled="true"
-                    app:errorMessage="@{vm.phoneErrorLiveData}"
+                    app:errorEnabled="@{vm.phoneError == null ? false : true}"
+                    app:errorMessage="@{vm.phoneError}"
                     app:prefixText="+20 "
                     app:startIconDrawable="@drawable/ic_phone">
 
@@ -111,8 +111,8 @@
                     android:padding="8dp"
                     android:textColorHint="@color/gray_110"
                     app:boxStrokeColor="@color/selector_outlined_et"
-                    app:errorEnabled="true"
-                    app:errorMessage="@{vm.emailErrorLiveData}"
+                    app:errorEnabled="@{vm.emailError == null ? false : true}"
+                    app:errorMessage="@{vm.emailError}"
                     app:startIconDrawable="@drawable/ic_email">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -151,8 +151,8 @@
                         android:textColorHint="@color/gray_110"
                         app:boxStrokeColor="@color/selector_outlined_et"
                         app:endIconMode="password_toggle"
-                        app:errorEnabled="true"
-                        app:errorMessage="@{vm.passwordErrorLiveData}"
+                        app:errorEnabled="@{vm.passwordError == null ? false : true}"
+                        app:errorMessage="@{vm.passwordError}"
                         app:startIconDrawable="@drawable/ic_lock">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -183,8 +183,8 @@
                         android:textColorHint="@color/gray_110"
                         app:boxStrokeColor="@color/selector_outlined_et"
                         app:endIconMode="password_toggle"
-                        app:errorEnabled="true"
-                        app:errorMessage="@{vm.rePasswordErrorLiveData}">
+                        app:errorEnabled="@{vm.rePasswordError == null ? false : true}"
+                        app:errorMessage="@{vm.rePasswordError}">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/password_confirmation_edt"

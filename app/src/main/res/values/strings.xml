@@ -65,4 +65,5 @@
     <string name="subcategory_filter">Subcategory: %1$s</string>
     <string name="brandFilter">Brand: %1$s</string>
     <string name="sort_by_filter">Sort by: %1$s</string>
+    <string name="welcome">Welcome, %1$s</string>
 </resources>

@@ -1,12 +1,12 @@
-package com.example.routeEcommerce.ui.userAuthentication.fragments.register
+package com.example.routeEcommerce.ui.userAuthentication.fragments.login
 
 import androidx.lifecycle.LiveData
 import com.example.routeEcommerce.base.ViewMessage
 import com.route.domain.models.AuthResponse
 import kotlinx.coroutines.flow.StateFlow
 
-class RegisterContract {
-    interface RegisterViewModel {
+class LoginContract {
+    interface LoginViewModel {
         val event: LiveData<Event>
         val state: StateFlow<State>
 
@@ -14,18 +14,18 @@ class RegisterContract {
     }
 
     sealed class Action {
-        data object Register : Action()
+        data object Login : Action()
     }
 
     sealed class Event {
-        class ErrorMessage(val message: ViewMessage) : Event()
+        data class ErrorMessage(val message: ViewMessage) : Event()
     }
 
     sealed class State {
         data object Pending : State()
 
-        data object Registering : State()
+        data object Logging : State()
 
-        data class Registered(val user: AuthResponse) : State()
+        data class Logged(val response: AuthResponse) : State()
     }
 }

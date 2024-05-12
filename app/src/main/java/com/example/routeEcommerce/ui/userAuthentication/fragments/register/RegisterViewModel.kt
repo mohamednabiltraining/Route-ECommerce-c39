@@ -1,13 +1,13 @@
 package com.example.routeEcommerce.ui.userAuthentication.fragments.register
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.routeEcommerce.base.BaseViewModel
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
-import com.route.domain.usecase.auth.RegisterValidationUseCase
 import com.route.domain.usecase.auth.RegistrationUseCase
+import com.route.domain.usecase.auth.ValidationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -20,9 +20,20 @@ import javax.inject.Inject
 class RegisterViewModel
     @Inject
     constructor(
-        private val registerValidator: RegisterValidationUseCase,
+        private val registerValidator: ValidationUseCase,
         private val registerUseCase: RegistrationUseCase,
     ) : BaseViewModel(), RegisterContract.RegisterViewModel {
+        val usernameLiveData = MutableLiveData<String>()
+        val usernameError = MutableLiveData<String?>()
+        val emailLiveData = MutableLiveData<String>()
+        val emailError = MutableLiveData<String?>()
+        val passwordLiveData = MutableLiveData<String>()
+        val passwordError = MutableLiveData<String?>()
+        val rePasswordLiveData = MutableLiveData<String>()
+        val rePasswordError = MutableLiveData<String?>()
+        val phoneLiveData = MutableLiveData<String>()
+        val phoneError = MutableLiveData<String?>()
+
         private val _event = SingleLiveEvent<RegisterContract.Event>()
         override val event: LiveData<RegisterContract.Event>
             get() = _event
@@ -31,17 +42,6 @@ class RegisterViewModel
             MutableStateFlow<RegisterContract.State>(RegisterContract.State.Pending)
         override val state: StateFlow<RegisterContract.State>
             get() = _state
-
-        val usernameLiveData = MediatorLiveData<String>()
-        val usernameErrorLiveData = MediatorLiveData<String?>()
-        val emailLiveData = MediatorLiveData<String>()
-        val emailErrorLiveData = MediatorLiveData<String?>()
-        val passwordLiveData = MediatorLiveData<String>()
-        val passwordErrorLiveData = MediatorLiveData<String?>()
-        val rePasswordLiveData = MediatorLiveData<String>()
-        val rePasswordErrorLiveData = MediatorLiveData<String?>()
-        val phoneLiveData = MediatorLiveData<String>()
-        val phoneErrorLiveData = MediatorLiveData<String?>()
 
         override fun doAction(action: RegisterContract.Action) {
             when (action) {
@@ -69,6 +69,7 @@ class RegisterViewModel
                         }
 
                         else -> {
+                            _state.emit(RegisterContract.State.Pending)
                             extractViewMessage(resource)?.let {
                                 _event.postValue(RegisterContract.Event.ErrorMessage(it))
                             }
@@ -84,33 +85,33 @@ class RegisterViewModel
             validatePassword()
             validateRePassword()
             validatePhone()
-            return usernameErrorLiveData.value == null &&
-                emailErrorLiveData.value == null &&
-                passwordErrorLiveData.value == null &&
-                rePasswordErrorLiveData.value == null && phoneErrorLiveData.value == null
+            return usernameError.value == null &&
+                emailError.value == null &&
+                passwordError.value == null &&
+                rePasswordError.value == null && phoneError.value == null
         }
 
         private fun validateUsername() {
             if (registerValidator.isValidUserName(usernameLiveData.value)) {
-                usernameErrorLiveData.value = null
+                usernameError.value = null
             } else {
-                usernameErrorLiveData.value = "Username is not valid"
+                usernameError.value = "Username is not valid"
             }
         }
 
         private fun validateEmail() {
             if (registerValidator.isValidEmail(emailLiveData.value)) {
-                emailErrorLiveData.value = null
+                emailError.value = null
             } else {
-                emailErrorLiveData.value = "Email is not valid"
+                emailError.value = "Email is not valid"
             }
         }
 
         private fun validatePassword() {
             if (registerValidator.isValidPassword(passwordLiveData.value)) {
-                passwordErrorLiveData.value = null
+                passwordError.value = null
             } else {
-                passwordErrorLiveData.value = "Password is not valid"
+                passwordError.value = "Password is not valid"
             }
         }
 
@@ -120,17 +121,17 @@ class RegisterViewModel
                     rePasswordLiveData.value,
                 )
             ) {
-                rePasswordErrorLiveData.value = null
+                rePasswordError.value = null
             } else {
-                rePasswordErrorLiveData.value = "Passwords do not match"
+                rePasswordError.value = "Passwords do not match"
             }
         }
 
         private fun validatePhone() {
             if (registerValidator.isValidPhoneNumber(phoneLiveData.value)) {
-                phoneErrorLiveData.value = null
+                phoneError.value = null
             } else {
-                phoneErrorLiveData.value = "Phone is not valid"
+                phoneError.value = "Phone is not valid"
             }
         }
     }

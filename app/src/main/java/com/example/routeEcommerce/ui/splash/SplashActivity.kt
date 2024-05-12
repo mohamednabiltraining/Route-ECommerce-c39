@@ -9,7 +9,10 @@ import android.os.Looper
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.routeEcommerce.R
+import com.example.routeEcommerce.ui.home.activity.MainActivity
 import com.example.routeEcommerce.ui.userAuthentication.activity.UserAuthenticationActivity
+import com.example.routeEcommerce.utils.UserDataFiled
+import com.example.routeEcommerce.utils.UserDataUtils
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -22,11 +25,24 @@ class SplashActivity : AppCompatActivity() {
         makeStatusBarTransparentAndIconsClear()
         Handler(Looper.getMainLooper())
             .postDelayed({
-                startMainActivity()
+                if (!isAuthenticated()) {
+                    startAuthenticationActivity()
+                } else {
+                    startMainActivity()
+                }
             }, 1200)
     }
 
+    private fun isAuthenticated(): Boolean {
+        return (UserDataUtils().getUserData(this, UserDataFiled.TOKEN) != null)
+    }
+
     private fun startMainActivity() {
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
+    }
+
+    private fun startAuthenticationActivity() {
         startActivity(Intent(this, UserAuthenticationActivity::class.java))
         finish()
     }

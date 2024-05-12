@@ -13,7 +13,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
 
     private var _binding: VB? = null
 
-    protected val binding: VB get() = _binding!!
+    val binding: VB get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

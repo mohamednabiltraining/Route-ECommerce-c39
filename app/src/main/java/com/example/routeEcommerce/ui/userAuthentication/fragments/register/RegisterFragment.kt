@@ -8,16 +8,16 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.example.routeEcommerce.Constants
 import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.BaseFragment
 import com.example.routeEcommerce.databinding.FragmentRegisterBinding
 import com.example.routeEcommerce.ui.home.activity.MainActivity
+import com.example.routeEcommerce.utils.UserDataFiled
+import com.example.routeEcommerce.utils.UserDataUtils
 import com.example.routeEcommerce.utils.hideKeyboard
 import com.google.android.material.snackbar.Snackbar
-import com.route.domain.models.User
+import com.route.domain.models.AuthResponse
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -51,28 +51,21 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding, RegisterViewModel
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
-                    RegisterContract.State.Registering -> {
-                        showLoadingView()
-                    }
+                    RegisterContract.State.Registering -> showLoadingView()
 
-                    is RegisterContract.State.Registered -> {
-                        showSuccessView()
-                        delay(2000)
-                        navigateToHome(state.user)
-                    }
+                    is RegisterContract.State.Registered -> navigateToHome(state.user)
 
-                    RegisterContract.State.Pending -> {}
+                    RegisterContract.State.Pending -> showSuccessView()
                 }
             }
         }
     }
 
     private fun initViews() {
-        var isClicked = false
+        binding.vm = viewModel
+        binding.lifecycleOwner = this
         binding.registerBtn.setOnClickListener {
             // register
-            if (isClicked) return@setOnClickListener
-            isClicked = true
             viewModel.doAction(RegisterContract.Action.Register)
         }
         binding.loginDoHaveAccountTv.setOnClickListener {
@@ -104,10 +97,12 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding, RegisterViewModel
         findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
     }
 
-    private fun navigateToHome(user: User) {
-        val intent = Intent(activity, MainActivity::class.java)
-        intent.putExtra(Constants.PARSE_USER_DATA, user)
-        startActivity(intent)
+    private fun navigateToHome(userData: AuthResponse) {
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.TOKEN, userData.token)
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.ROLE, userData.user?.role)
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.NAME, userData.user?.name)
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.EMAIL, userData.user?.email)
+        startActivity(Intent(activity, MainActivity::class.java))
         requireActivity().finish()
     }
 

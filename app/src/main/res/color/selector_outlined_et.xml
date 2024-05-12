@@ -5,7 +5,7 @@
     <item android:alpha="0.38" android:color="@macro/m3_comp_outlined_text_field_disabled_outline_color" android:state_enabled="false" />
 
 
-    <item android:color="@macro/m3_comp_outlined_text_field_focus_outline_color" android:state_focused="true" />
+    <item android:color="@macro/m3_comp_outlined_text_field_focus_outline_color" android:state_focused="true" android:state_pressed="true" />
 
     <item android:color="@macro/m3_comp_outlined_text_field_hover_outline_color" android:state_hovered="true" />
 

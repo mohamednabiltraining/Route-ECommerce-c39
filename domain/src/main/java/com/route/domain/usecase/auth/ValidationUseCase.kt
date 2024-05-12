@@ -2,14 +2,14 @@ package com.route.domain.usecase.auth
 
 import javax.inject.Inject
 
-class RegisterValidationUseCase
+class ValidationUseCase
     @Inject
     constructor() {
         fun isValidUserName(userName: String?): Boolean {
             return if (userName.isNullOrEmpty()) {
                 false
             } else {
-                userName.length < 6
+                userName.length >= 6
             }
         }
 
@@ -25,21 +25,22 @@ class RegisterValidationUseCase
         fun isValidPhoneNumber(phoneNumber: String?): Boolean {
             return if (phoneNumber.isNullOrEmpty()) {
                 false
-            } else if (phoneNumber.length == 11) {
-                phoneNumber[0] == '0' && phoneNumber[1] == '1' &&
+            } else if (phoneNumber.length == 10) {
+                phoneNumber[0] == '1' &&
                     arrayOf(
                         '0',
                         '1',
                         '2',
                         '5',
-                    ).contains(phoneNumber[2])
+                    ).contains(phoneNumber[1])
             } else {
                 false
             }
         }
 
         fun isValidPassword(password: String?): Boolean {
-            val passwordRegex = Regex("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$")
+            val passwordRegex =
+                Regex("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@\$!%*#?&])[A-Za-z\\d@\$!%*#?&]{8,}$")
             return if (password.isNullOrEmpty()) {
                 false
             } else {

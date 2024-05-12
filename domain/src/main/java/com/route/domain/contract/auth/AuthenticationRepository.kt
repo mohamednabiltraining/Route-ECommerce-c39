@@ -1,7 +1,7 @@
 package com.route.domain.contract.auth
 
 import com.route.domain.common.Resource
-import com.route.domain.models.User
+import com.route.domain.models.AuthResponse
 import kotlinx.coroutines.flow.Flow
 
 interface AuthenticationRepository {
@@ -11,10 +11,10 @@ interface AuthenticationRepository {
         password: String,
         repeatPassword: String,
         phone: String,
-    ): Flow<Resource<User?>>
+    ): Flow<Resource<AuthResponse?>>
 
     suspend fun signIn(
         email: String,
         password: String,
-    ): Flow<Resource<User?>>
+    ): Flow<Resource<AuthResponse?>>
 }
