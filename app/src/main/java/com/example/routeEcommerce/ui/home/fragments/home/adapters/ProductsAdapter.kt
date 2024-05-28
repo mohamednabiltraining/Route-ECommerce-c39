@@ -96,6 +96,7 @@ class ProductsAdapter(private val context: Context) :
                         // holder.itemProductBinding.isWishlist = true
                     }
                 }
+                // notifyItemChanged(position)
             }
         }
 
@@ -135,6 +136,7 @@ class ProductsAdapter(private val context: Context) :
 
     fun setWishlistData(newWishlist: List<String?>) {
         this.wishlistItems = newWishlist
+        notifyDataSetChanged()
     }
 
     var openProductDetails: ((product: Product) -> Unit)? = null
