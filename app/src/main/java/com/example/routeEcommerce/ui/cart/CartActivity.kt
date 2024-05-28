@@ -6,7 +6,7 @@ import com.example.routeEcommerce.databinding.ActivityCartBinding
 
 class CartActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCartBinding
-    val adapter = CartAdapter()
+    val adapter by lazy { CartAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

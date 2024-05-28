@@ -1,24 +1,36 @@
 package com.example.routeEcommerce.ui.home.fragments.wishlist
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
+import com.example.routeEcommerce.R
+import com.example.routeEcommerce.base.BaseFragment
+import com.example.routeEcommerce.base.showDialog
 import com.example.routeEcommerce.databinding.FragmentWishlistBinding
+import com.example.routeEcommerce.ui.home.fragments.wishlist.adapter.WishListAdapter
+import com.example.routeEcommerce.ui.userAuthentication.activity.UserAuthenticationActivity
+import com.example.routeEcommerce.utils.UserDataFiled
+import com.example.routeEcommerce.utils.UserDataUtils
+import com.example.routeEcommerce.utils.showSnackBar
+import com.route.domain.models.WishlistItem
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-class WishListFragment : Fragment() {
-    private lateinit var viewBinding: FragmentWishlistBinding
-    private val adapter = WishListAdapter()
+@AndroidEntryPoint
+class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel>() {
+    private val mViewModel: WishlistContract.WishlistViewModel by viewModels<WishlistViewModel>()
+    private val adapter by lazy { WishListAdapter(requireContext()) }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        viewBinding = FragmentWishlistBinding.inflate(inflater, container, false)
-        return viewBinding.root
+    override fun initViewModel(): WishlistViewModel {
+        return mViewModel as WishlistViewModel
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_wishlist
     }
 
     override fun onViewCreated(
@@ -26,29 +38,79 @@ class WishListFragment : Fragment() {
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-        initView()
-//        LoadWishList
-//        adapter.bindItems()
+        observeData()
+        loadWishlist()
     }
 
-    private fun initView() {
-        viewBinding.recyclerView.adapter = adapter
-    }
-
-    private fun showError(message: String) {
-        viewBinding.errorView.isVisible = true
-        viewBinding.successView.isVisible = false
-        viewBinding.loadingView.isVisible = false
-        viewBinding.errorText.text = message
-        viewBinding.tryAgainButton.setOnClickListener {
-//            LoadWishList
+    private fun loadWishlist() {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
+        if (token != null) {
+            viewModel.doAction(WishlistContract.Action.InitWishlist(token))
+        } else {
+            showDialog(
+                message = "Login Again",
+                posActionName = "Go login",
+                posActionCallBack = {
+                    startActivity(Intent(requireActivity(), UserAuthenticationActivity::class.java))
+                    requireActivity().finish()
+                },
+                isCancelable = false,
+            )
         }
     }
 
-    private fun showLoading(message: String) {
-        viewBinding.errorView.isVisible = false
-        viewBinding.successView.isVisible = false
-        viewBinding.loadingView.isVisible = true
-        viewBinding.errorText.text = message
+    private fun observeData() {
+        viewModel.event.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                is WishlistContract.Event.ErrorMessage -> showError(event.errorMessage.message)
+            }
+        }
+        lifecycleScope.launch {
+            viewModel.state.collect { state ->
+                when (state) {
+                    WishlistContract.State.Loading -> showLoading()
+                    is WishlistContract.State.RemovedSuccessfully -> showSnackBar(state.message)
+                    is WishlistContract.State.Success -> initView(state.wishlist)
+                }
+            }
+        }
+    }
+
+    private fun initView(wishlist: List<WishlistItem>) {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
+        binding.errorView.isVisible = false
+        binding.successView.isVisible = true
+        binding.loadingView.isVisible = false
+        if (wishlist.isEmpty()) {
+            binding.emptyWishlist.isVisible = true
+            binding.recyclerView.isVisible = false
+        } else {
+            binding.emptyWishlist.isGone = true
+            binding.recyclerView.isVisible = true
+            binding.recyclerView.adapter = adapter
+            adapter.bindItems(wishlist)
+            adapter.removeProductFromWishlist = { productId ->
+                token?.let {
+                    viewModel.doAction(WishlistContract.Action.RemoveProduct(it, productId))
+                }
+            }
+        }
+    }
+
+    private fun showError(message: String) {
+        binding.errorView.isVisible = true
+        binding.successView.isVisible = false
+        binding.loadingView.isVisible = false
+        binding.errorText.text = message
+        binding.tryAgainButton.setOnClickListener {
+//            LoadWishList
+            loadWishlist()
+        }
+    }
+
+    private fun showLoading() {
+        binding.errorView.isVisible = false
+        binding.successView.isVisible = false
+        binding.loadingView.isVisible = true
     }
 }

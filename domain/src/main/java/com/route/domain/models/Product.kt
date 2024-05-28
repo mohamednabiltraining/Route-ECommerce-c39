@@ -8,7 +8,6 @@ data class Product(
     val id: String? = null,
     val brand: Brand? = null,
     val category: Category? = null,
-    val createdAt: String? = null,
     val description: String? = null,
     val imageCover: String? = null,
     val images: List<String?>? = null,
@@ -21,5 +20,4 @@ data class Product(
     val sold: Int? = null,
     val subcategory: List<Subcategory>? = null,
     val title: String? = null,
-    val updatedAt: String? = null,
 ) : Parcelable

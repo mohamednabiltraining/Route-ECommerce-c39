@@ -1,6 +1,6 @@
 package com.route.data.datasource.products
 
-import com.route.data.api.WebServices
+import com.route.data.api.webServices.ProductWebServices
 import com.route.data.contract.ProductsOnlineDataSource
 import com.route.data.executeApi
 import com.route.domain.contract.products.SortBy
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class ProductsOnlineDataSourceImpl
     @Inject
     constructor(
-        private val webServices: WebServices,
+        private val webServices: ProductWebServices,
     ) : ProductsOnlineDataSource {
         override suspend fun getProducts(
             limit: Int?,

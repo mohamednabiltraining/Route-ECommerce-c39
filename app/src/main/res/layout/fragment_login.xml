@@ -66,7 +66,7 @@
                     android:minLines="1"
                     android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    app:boxStrokeColor="@color/selector_outlined_et"
+                    app:boxStrokeColor="@color/selector_outlined_auth"
                     app:errorEnabled="@{vm.emailError == null ? false : true}"
                     app:errorMessage="@{vm.emailError}"
                     app:startIconDrawable="@drawable/ic_email">
@@ -84,7 +84,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/password_layout"
+                    android:id="@+id/new_password_layout"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,14 +96,14 @@
                     android:minLines="1"
                     android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    app:boxStrokeColor="@color/selector_outlined_et"
+                    app:boxStrokeColor="@color/selector_outlined_auth"
                     app:endIconMode="password_toggle"
                     app:errorEnabled="@{vm.passwordError == null ? false : true}"
                     app:errorMessage="@{vm.passwordError}"
                     app:startIconDrawable="@drawable/ic_lock">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/password_edt"
+                        android:id="@+id/new_password_edt"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:autofillHints="@string/enter_your_password"

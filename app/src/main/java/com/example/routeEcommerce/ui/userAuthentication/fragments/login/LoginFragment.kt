@@ -16,7 +16,7 @@ import com.example.routeEcommerce.ui.home.activity.MainActivity
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils
 import com.example.routeEcommerce.utils.hideKeyboard
-import com.google.android.material.snackbar.Snackbar
+import com.example.routeEcommerce.utils.showSnackBar
 import com.route.domain.models.AuthResponse
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -82,11 +82,7 @@ class LoginFragment : BaseFragment<FragmentLoginBinding, LoginViewModel>() {
     private fun showErrorView(message: String) {
         binding.icNext.isVisible = true
         binding.progressBar.isVisible = false
-        Snackbar.make(requireView(), message, Snackbar.LENGTH_SHORT)
-            .setAnimationMode(Snackbar.ANIMATION_MODE_SLIDE)
-            .setTextColor(requireContext().getColor(R.color.gray))
-            .setBackgroundTint(requireContext().getColor(R.color.white))
-            .show()
+        showSnackBar(message)
     }
 
     private fun showLoadingView() {

@@ -72,7 +72,6 @@ class LoginViewModel
 
         private fun isValidInputs(): Boolean {
             validateEmail()
-            validatePassword()
             return (emailError.value == null && passwordError.value == null)
         }
 
@@ -81,14 +80,6 @@ class LoginViewModel
                 emailError.value = null
             } else {
                 emailError.value = "Email not valid"
-            }
-        }
-
-        private fun validatePassword() {
-            if (validationUseCase.isValidPassword(passwordLiveData.value)) {
-                passwordError.value = null
-            } else {
-                passwordError.value = "Password not valid"
             }
         }
     }

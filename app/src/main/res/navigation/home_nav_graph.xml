@@ -70,7 +70,14 @@
         android:id="@+id/profileFragment"
         android:name="com.example.routeEcommerce.ui.home.fragments.profile.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment_to_addAddressDialogFragment"
+            app:destination="@id/addAddressDialogFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_editProfileDialogFragment"
+            app:destination="@id/editProfileDialogFragment" />
+    </fragment>
     <fragment
         android:id="@+id/filtrationFragment"
         android:name="com.example.routeEcommerce.ui.home.fragments.filter.FiltrationFragment"
@@ -89,4 +96,18 @@
             android:name="categoryId"
             app:argType="string" />
     </fragment>
+    <dialog
+        android:id="@+id/addAddressDialogFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.addAddress.AddAddressDialogFragment"
+        android:label="fragment_add_address_dialog_list_dialog"
+        tools:layout="@layout/fragment_add_address_dialog" />
+    <dialog
+        android:id="@+id/editProfileDialogFragment"
+        android:name="com.example.routeEcommerce.ui.home.fragments.editProfile.EditProfileDialogFragment"
+        android:label="fragment_edit_profile"
+        tools:layout="@layout/fragment_edit_profile_dialog">
+        <argument
+            android:name="editType"
+            app:argType="com.example.routeEcommerce.ui.home.fragments.editProfile.EditEdition" />
+    </dialog>
 </navigation>

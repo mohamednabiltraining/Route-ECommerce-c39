@@ -69,7 +69,9 @@ class ProductsListViewModel
                             }
 
                             else -> {
-                                extractViewMessage(resource)
+                                extractViewMessage(resource)?.let {
+                                    _event.postValue(ProductContract.Event.ShowMessage(it))
+                                }
                             }
                         }
                     }
@@ -116,7 +118,9 @@ class ProductsListViewModel
                         }
 
                         else -> {
-                            extractViewMessage(resource)
+                            extractViewMessage(resource)?.let {
+                                _event.postValue(ProductContract.Event.ShowMessage(it))
+                            }
                         }
                     }
                 }

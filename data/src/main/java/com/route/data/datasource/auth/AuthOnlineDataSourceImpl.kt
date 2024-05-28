@@ -1,15 +1,16 @@
 package com.route.data.datasource.auth
 
-import com.route.data.api.WebServices
+import com.route.data.api.webServices.AuthenticationWebServices
 import com.route.data.contract.AuthOnlineDataSource
 import com.route.data.executeAuth
 import com.route.domain.models.AuthResponse
+import com.route.domain.models.User
 import javax.inject.Inject
 
 class AuthOnlineDataSourceImpl
     @Inject
     constructor(
-        private val webServices: WebServices,
+        private val webServices: AuthenticationWebServices,
     ) : AuthOnlineDataSource {
         override suspend fun signUp(
             userName: String,
@@ -28,7 +29,6 @@ class AuthOnlineDataSourceImpl
                         phone,
                     )
                 }
-            // TokenEncryptionManager().encryptToken(response.token)
             val authResponse = AuthResponse(response.user?.toUser(), response.token)
             return authResponse
         }
@@ -41,8 +41,40 @@ class AuthOnlineDataSourceImpl
                 executeAuth {
                     webServices.signIn(email, password)
                 }
-            // TokenEncryptionManager().encryptToken(response.token)
-            val authResponse: AuthResponse = AuthResponse(response.user?.toUser(), response.token)
+            val authResponse = AuthResponse(response.user?.toUser(), response.token)
+            return authResponse
+        }
+
+        override suspend fun updateAccountName(
+            token: String,
+            newName: String,
+        ): User? {
+            val response =
+                executeAuth {
+                    webServices.updateAccountName(
+                        token,
+                        newName,
+                    )
+                }
+            return response.user?.toUser()
+        }
+
+        override suspend fun updateAccountPassword(
+            token: String,
+            currentPassword: String,
+            newPassword: String,
+            confirmPassword: String,
+        ): AuthResponse {
+            val response =
+                executeAuth {
+                    webServices.updateAccountPassword(
+                        token,
+                        currentPassword,
+                        newPassword,
+                        confirmPassword,
+                    )
+                }
+            val authResponse = AuthResponse(response.user?.toUser(), response.token)
             return authResponse
         }
     }

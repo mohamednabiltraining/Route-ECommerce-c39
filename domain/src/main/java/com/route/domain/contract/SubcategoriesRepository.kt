@@ -1,4 +1,4 @@
-package com.route.domain.contract.subcategory
+package com.route.domain.contract
 
 import com.route.domain.common.Resource
 import com.route.domain.models.Subcategory

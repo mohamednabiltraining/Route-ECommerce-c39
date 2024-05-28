@@ -3,17 +3,23 @@ package com.example.routeEcommerce.ui.home.fragments.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.routeEcommerce.base.BaseViewModel
+import com.example.routeEcommerce.ui.home.fragments.home.model.HomeData
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
 import com.route.domain.models.Category
 import com.route.domain.models.Product
+import com.route.domain.models.WishlistItem
 import com.route.domain.usecase.GetCategoriesUseCase
 import com.route.domain.usecase.GetMostSoldProductsUseCase
 import com.route.domain.usecase.product.GetCategoryProductsUseCase
+import com.route.domain.usecase.wishlist.AddProductToWishlistUseCase
+import com.route.domain.usecase.wishlist.DeleteProductFromWishlistUseCase
+import com.route.domain.usecase.wishlist.GetLoggedUserWishlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +30,9 @@ class HomeFragmentViewModel
         private val getCategoriesUseCase: GetCategoriesUseCase,
         private val getMostSoldProductsUseCase: GetMostSoldProductsUseCase,
         private val getElectronicProducts: GetCategoryProductsUseCase,
+        private val getLoggedUserWishlistUseCase: GetLoggedUserWishlistUseCase,
+        private val addProductToWishlistUseCase: AddProductToWishlistUseCase,
+        private val deleteProductFromWishlistUseCase: DeleteProductFromWishlistUseCase,
     ) : BaseViewModel(), HomeContract.ViewModel {
         private val _state = MutableStateFlow<HomeContract.State>(HomeContract.State.Loading)
         override val state: StateFlow<HomeContract.State>
@@ -36,20 +45,75 @@ class HomeFragmentViewModel
         private val mostSellingProducts: List<Product>? = null
         private val categories: List<Category>? = null
         private val electronicProducts: List<Product>? = null
+        private val wishlist: List<WishlistItem>? = null
 
         override fun doAction(action: HomeContract.Action) {
             when (action) {
-                HomeContract.Action.InitPage -> {
-                    initPage()
+                is HomeContract.Action.InitPage -> {
+                    // initPage(action.token)
+                    initCombine(action.token)
+                }
+
+                is HomeContract.Action.AddProductToWishlist -> {
+                    addProductToWishlist(
+                        action.token,
+                        action.productId,
+                    )
+                }
+
+                is HomeContract.Action.RemoveProductFromWishlist -> {
+                    removeProductFromWishlist(
+                        action.token,
+                        action.productId,
+                    )
                 }
             }
         }
 
-        private fun initPage() {
-            getMostSellingProducts()
-            getCategories()
-            getElectronicProducts()
+        private fun initCombine(token: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                combine(
+                    getCategoriesUseCase.invoke(),
+                    getMostSoldProductsUseCase.invoke(5),
+                    getElectronicProducts.invoke("6439d2d167d9aa4ca970649f"),
+                    getLoggedUserWishlistUseCase.invoke(token),
+                ) { categoriesList, mostProductsList, electronicProducts, wishlist ->
+                    var data: HomeData? = null
+                    if (categoriesList is Resource.Success &&
+                        mostProductsList is Resource.Success &&
+                        electronicProducts is Resource.Success &&
+                        wishlist is Resource.Success
+                    ) {
+                        data =
+                            HomeData(
+                                category = categoriesList.data,
+                                mostSellingProductList = mostProductsList.data,
+                                electronicsList = electronicProducts.data,
+                                wishListList = wishlist.data,
+                            )
+                    }
+                    data
+                }.collect {
+                    it?.let { data ->
+                        _state.emit(
+                            HomeContract.State.Success(
+                                mostSellingProduct = data.mostSellingProductList,
+                                categories = data.category,
+                                electronicProducts = data.electronicsList,
+                                wishlist = data.wishListList,
+                            ),
+                        )
+                    }
+                }
+            }
         }
+
+    /*private fun initPage(token: String) {
+        // getMostSellingProducts()
+        // getCategories()
+        // getElectronicProducts()
+        // loadWishlist(token)
+    }*/
 
         private fun getCategories() {
             viewModelScope.launch(Dispatchers.IO) {
@@ -62,6 +126,7 @@ class HomeFragmentViewModel
                                         mostSellingProduct = mostSellingProducts,
                                         categories = resource.data,
                                         electronicProducts = electronicProducts,
+                                        wishlist = wishlist,
                                     ),
                                 )
                             }
@@ -121,6 +186,77 @@ class HomeFragmentViewModel
                             }
                         }
                     }
+            }
+        }
+
+        private fun addProductToWishlist(
+            token: String,
+            productId: String,
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
+                addProductToWishlistUseCase.invoke(token, productId).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            _event.postValue(
+                                HomeContract.Event.AddedSuccessfully(
+                                    resource.data.message!!,
+                                    resource.data.data!!,
+                                ),
+                            )
+                        }
+
+                        else -> {
+                            extractViewMessage(resource)?.let {
+                                _event.postValue(HomeContract.Event.ShowMessage(it))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun removeProductFromWishlist(
+            token: String,
+            productId: String,
+        ) {
+            viewModelScope.launch(Dispatchers.IO) {
+                deleteProductFromWishlistUseCase.invoke(token, productId).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            _event.postValue(
+                                HomeContract.Event.RemovedSuccessfully(
+                                    resource.data.message!!,
+                                    resource.data.data!!,
+                                ),
+                            )
+                        }
+
+                        else -> {
+                            extractViewMessage(resource)?.let {
+                                _event.postValue(HomeContract.Event.ShowMessage(it))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private fun loadWishlist(token: String) {
+            viewModelScope.launch(Dispatchers.IO) {
+                getLoggedUserWishlistUseCase.invoke(token).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            resource.data?.let {
+                            }
+                        }
+
+                        else -> {
+                            extractViewMessage(resource)?.let {
+                                _event.postValue(HomeContract.Event.ShowMessage(it))
+                            }
+                        }
+                    }
+                }
             }
         }
     }

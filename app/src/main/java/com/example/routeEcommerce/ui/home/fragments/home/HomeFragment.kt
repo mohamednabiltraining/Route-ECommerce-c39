@@ -12,10 +12,15 @@ import androidx.navigation.fragment.findNavController
 import com.example.routeEcommerce.Constants.PRODUCT
 import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.BaseFragment
+import com.example.routeEcommerce.base.showDialog
 import com.example.routeEcommerce.databinding.FragmentHomeBinding
 import com.example.routeEcommerce.ui.home.fragments.home.adapters.CategoriesAdapter
 import com.example.routeEcommerce.ui.home.fragments.home.adapters.ProductsAdapter
 import com.example.routeEcommerce.ui.productDetails.ProductDetailsActivity
+import com.example.routeEcommerce.ui.userAuthentication.activity.UserAuthenticationActivity
+import com.example.routeEcommerce.utils.UserDataFiled
+import com.example.routeEcommerce.utils.UserDataUtils
+import com.example.routeEcommerce.utils.showSnackBar
 import com.route.domain.models.Category
 import com.route.domain.models.Product
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,9 +28,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() {
-    private val categoriesAdapter = CategoriesAdapter()
-    private val mostSellingProductsAdapter = ProductsAdapter()
-    private val categoryProductsAdapter = ProductsAdapter()
+    private val categoriesAdapter by lazy { CategoriesAdapter() }
+    private val mostSellingProductsAdapter by lazy { ProductsAdapter(requireContext()) }
+    private val categoryProductsAdapter by lazy { ProductsAdapter(requireContext()) }
 
     private val mViewModel: HomeContract.ViewModel by viewModels<HomeFragmentViewModel>()
 
@@ -44,7 +49,24 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         super.onViewCreated(view, savedInstanceState)
         initViews()
         observeLiveData()
-        viewModel.doAction(HomeContract.Action.InitPage)
+        loadPage()
+    }
+
+    private fun loadPage() {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
+        if (token != null) {
+            viewModel.doAction(HomeContract.Action.InitPage(token))
+        } else {
+            showDialog(
+                message = "Login Again",
+                posActionName = "Go login",
+                posActionCallBack = {
+                    startActivity(Intent(requireActivity(), UserAuthenticationActivity::class.java))
+                    requireActivity().finish()
+                },
+                isCancelable = false,
+            )
+        }
     }
 
     private fun observeLiveData() {
@@ -62,19 +84,43 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
                 Log.e("Message->", event.viewMessage.message)
                 showErrorView(event.viewMessage.message)
             }
+
+            is HomeContract.Event.AddedSuccessfully -> {
+                categoryProductsAdapter.setWishlistData(event.wishlistItemsId)
+                mostSellingProductsAdapter.setWishlistData(event.wishlistItemsId)
+                showSnackBar(event.message)
+            }
+
+            is HomeContract.Event.RemovedSuccessfully -> {
+                categoryProductsAdapter.setWishlistData(event.wishlistItemsId)
+                mostSellingProductsAdapter.setWishlistData(event.wishlistItemsId)
+                showSnackBar(event.message)
+            }
         }
     }
 
     private fun renderViewState(state: HomeContract.State) {
         when (state) {
+            HomeContract.State.Idle -> {}
             is HomeContract.State.Loading -> {
-                Log.e("log->", "Loading")
                 showLoadingShimmer()
             }
 
             is HomeContract.State.Success -> {
-                Log.wtf("Loading->", "WTF_Loading???!!")
                 // showSuccess()
+                state.wishlist?.let {
+                    categoryProductsAdapter.setWishlistData(
+                        it.map { item ->
+                            item.id
+                        },
+                    )
+                    mostSellingProductsAdapter.setWishlistData(
+                        it.map { item ->
+                            item.id
+                        },
+                    )
+                }
+
                 state.categories?.let {
                     binding.categoriesShimmerViewContainer.isGone = true
                     categoriesAdapter.bindCategories(it)
@@ -110,20 +156,49 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
     }
 
     private fun initViews() {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         categoriesAdapter.setOnCategoryClickListener { category ->
             navigateToCategoriesFragment(category)
         }
         binding.categoriesRv.adapter = categoriesAdapter
-        binding.mostSellingProductsRv.adapter = mostSellingProductsAdapter
+        initMostProductAdapter(token)
+        initCategoryProductsAdapter(token)
+        binding.categoryNameTv.text = getString(R.string.electronics)
+        // categoryProductsAdapter.bindProducts()
+    }
+
+    private fun initCategoryProductsAdapter(token: String?) {
         binding.categoryProductsRv.adapter = categoryProductsAdapter
-        mostSellingProductsAdapter.openProductDetails = {
-            navigateToProductDetailsFragment(it)
-        }
         categoryProductsAdapter.openProductDetails = {
             navigateToProductDetailsFragment(it)
         }
-        binding.categoryNameTv.text = getString(R.string.electronics)
-        // categoryProductsAdapter.bindProducts()
+        categoryProductsAdapter.addProductToWishListClicked = { product ->
+            token?.let {
+                viewModel.doAction(HomeContract.Action.AddProductToWishlist(it, product.id!!))
+            }
+        }
+        categoryProductsAdapter.removeProductFromWishListClicked = { product ->
+            token?.let {
+                viewModel.doAction(HomeContract.Action.RemoveProductFromWishlist(it, product.id!!))
+            }
+        }
+    }
+
+    private fun initMostProductAdapter(token: String?) {
+        binding.mostSellingProductsRv.adapter = mostSellingProductsAdapter
+        mostSellingProductsAdapter.openProductDetails = {
+            navigateToProductDetailsFragment(it)
+        }
+        mostSellingProductsAdapter.addProductToWishListClicked = { product ->
+            token?.let {
+                viewModel.doAction(HomeContract.Action.AddProductToWishlist(it, product.id!!))
+            }
+        }
+        mostSellingProductsAdapter.removeProductFromWishListClicked = { product ->
+            token?.let {
+                viewModel.doAction(HomeContract.Action.RemoveProductFromWishlist(it, product.id!!))
+            }
+        }
     }
 
     private fun showErrorView(message: String) {
@@ -133,7 +208,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         binding.tryAgainBtn.setOnClickListener {
             // LoadPage
             showLoadingShimmer()
-            viewModel.doAction(HomeContract.Action.InitPage)
+            loadPage()
         }
     }
 

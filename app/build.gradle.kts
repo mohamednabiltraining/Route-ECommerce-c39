@@ -88,7 +88,9 @@ dependencies {
     implementation(libs.androidx.fragment.ktx)
 
     implementation(libs.hilt.android.v25)
+    implementation(libs.converter.gson)
     implementation(libs.androidx.legacy.support.v4)
+    implementation(libs.androidx.recyclerview)
     kapt(libs.hilt.android.compiler)
 
     testImplementation(libs.junit)
