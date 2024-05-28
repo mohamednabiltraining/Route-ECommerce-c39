@@ -1,8 +1,10 @@
 package com.example.routeEcommerce.ui.home.fragments.wishlist.adapter
 
 import android.content.Context
+import android.graphics.Paint
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -18,9 +20,26 @@ class WishListAdapter(private val context: Context) :
     class ViewHolder(private val context: Context, val viewBinding: ItemWishlistBinding) :
         RecyclerView.ViewHolder(viewBinding.root) {
         fun bind(item: WishlistItem) {
-            viewBinding.itemTitle.text = item.title
-            viewBinding.productPrice.text =
-                context.getString(R.string.egp, "%,d".format(item.price))
+            if (item.title?.length!! >= 24) {
+                val newTitle = item.title
+                viewBinding.itemTitle.text =
+                    newTitle?.replaceRange(20, item.title?.length!!, "…")
+            } else {
+                viewBinding.itemTitle.text = item.title
+            }
+            if (item.priceAfterDiscount != null) {
+                viewBinding.productPrice.text =
+                    context.getString(R.string.egp, "%,d".format(item.priceAfterDiscount))
+                viewBinding.productOldPrice.isVisible = true
+                viewBinding.productOldPrice.text =
+                    context.getString(R.string.egp, "%,d".format(item.price))
+                viewBinding.productOldPrice.paintFlags =
+                    viewBinding.productOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            } else {
+                viewBinding.productPrice.text =
+                    context.getString(R.string.egp, "%,d".format(item.price))
+                viewBinding.productOldPrice.isVisible = false
+            }
             Glide.with(itemView.context).load(item.imageCover)
                 .placeholder(R.drawable.wish_list_placeholder).into(viewBinding.itemImage)
         }
