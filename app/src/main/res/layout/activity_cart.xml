@@ -9,42 +9,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="10dp"
+        android:backgroundTint="@color/white"
         app:elevation="0dp">
 
-        <androidx.appcompat.widget.Toolbar
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/cart_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:paddingHorizontal="20dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:src="@drawable/ic_back" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:fontFamily="@font/poppins_regular"
-                android:text="@string/cart"
-                android:textColor="@color/dark_blue"
-                android:textSize="20sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:src="@drawable/ic_search" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginEnd="15dp"
-                android:src="@drawable/ic_shoppingcart" />
-        </androidx.appcompat.widget.Toolbar>
-
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="20dp"
+            app:title="@string/cart"
+            app:titleCentered="true"
+            app:titleTextColor="@color/dark_blue" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <include

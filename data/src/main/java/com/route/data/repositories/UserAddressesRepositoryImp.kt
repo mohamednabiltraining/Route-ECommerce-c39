@@ -1,4 +1,4 @@
-package com.route.data.repositories.user
+package com.route.data.repositories
 
 import com.route.data.contract.UserAddressesOnlineDataSource
 import com.route.data.toFlow

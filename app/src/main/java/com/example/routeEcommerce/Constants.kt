@@ -8,4 +8,5 @@ object Constants {
     const val USER_ROLE = "role"
     const val USER_NAME = "name"
     const val USER_EMAIL = "email"
+    const val CART_ITEM_COUNT = "cartItemCount"
 }

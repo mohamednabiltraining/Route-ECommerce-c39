@@ -1,4 +1,4 @@
-package com.route.data.repositories.product
+package com.route.data.repositories
 
 import com.route.data.contract.ProductsOnlineDataSource
 import com.route.data.toFlow

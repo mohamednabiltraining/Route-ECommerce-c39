@@ -1,4 +1,4 @@
-package com.route.data.repositories.auth
+package com.route.data.repositories
 
 import com.route.data.contract.AuthOnlineDataSource
 import com.route.data.toFlow

@@ -1,4 +1,4 @@
-package com.route.data.repositories.subcategories
+package com.route.data.repositories
 
 import com.route.data.contract.SubcategoriesOnlineDataSource
 import com.route.data.toFlow

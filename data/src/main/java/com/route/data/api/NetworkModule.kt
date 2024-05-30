@@ -3,6 +3,7 @@ package com.route.data.api
 import android.util.Log
 import com.route.data.api.webServices.AddressWebServices
 import com.route.data.api.webServices.AuthenticationWebServices
+import com.route.data.api.webServices.CartWebServices
 import com.route.data.api.webServices.CategoryWebServices
 import com.route.data.api.webServices.ProductWebServices
 import com.route.data.api.webServices.SubcategoryWebServices
@@ -61,6 +62,11 @@ class NetworkModule {
     @Provides
     fun provideAuthenticationWebServices(retrofit: Retrofit): AuthenticationWebServices {
         return retrofit.create(AuthenticationWebServices::class.java)
+    }
+
+    @Provides
+    fun provideCartWebServices(retrofit: Retrofit): CartWebServices {
+        return retrofit.create(CartWebServices::class.java)
     }
 
     @Provides

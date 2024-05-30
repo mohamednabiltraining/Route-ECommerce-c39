@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.android.hilt)
     id("androidx.navigation.safeargs.kotlin")
+    alias(libs.plugins.google.services)
+    alias(libs.plugins.firebase.crashlytics)
 }
 
 android {
@@ -79,6 +81,11 @@ dependencies {
 
     // touchImage
     implementation(libs.touch.imageview)
+
+    // firebase
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.bundles.firebase)
 
     implementation(project(":data"))
     implementation(project(":domain"))

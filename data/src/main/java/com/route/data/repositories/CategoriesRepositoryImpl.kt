@@ -1,4 +1,4 @@
-package com.route.data.repositories.category
+package com.route.data.repositories
 
 import com.route.data.contract.CategoryOnlineDataSource
 import com.route.data.toFlow

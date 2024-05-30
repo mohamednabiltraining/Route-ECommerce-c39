@@ -1,4 +1,4 @@
-package com.route.data.repositories.wishlist
+package com.route.data.repositories
 
 import com.route.data.contract.WishlistOnlineDataSource
 import com.route.data.toFlow

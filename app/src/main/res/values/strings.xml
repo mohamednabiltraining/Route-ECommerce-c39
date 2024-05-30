@@ -81,4 +81,6 @@
     <string name="current_password">Current Password</string>
     <string name="new_password">New Password</string>
     <string name="you_don_t_have_any_wished_items_yet">You don\'t have any wished items yet</string>
+    <string name="check_out">Check Out</string>
+    <string name="nothing_in_the_cart_yet">Nothing in the cart yet</string>
 </resources>
