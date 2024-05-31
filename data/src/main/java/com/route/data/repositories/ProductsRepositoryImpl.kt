@@ -25,4 +25,8 @@ class ProductsRepositoryImpl
                 productsOnlineDataSource.getProducts(limit, sortBy, categoryId, brandId, keyword)
             }
         }
+
+        override suspend fun getSpecificProduct(productId: String): Flow<Resource<Product?>> {
+            return toFlow { productsOnlineDataSource.getSpecificProduct(productId) }
+        }
     }

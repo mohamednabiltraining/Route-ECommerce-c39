@@ -1,4 +1,4 @@
-package com.example.routeEcommerce.ui.home.fragments.home.model
+package com.example.routeEcommerce.model
 
 import com.route.domain.models.Category
 import com.route.domain.models.Product

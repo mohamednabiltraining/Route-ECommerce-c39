@@ -29,17 +29,20 @@ class MainActivity : AppCompatActivity() {
         makeStatusBarTransparentAndIconsClear()
     }
 
+    override fun onResume() {
+        super.onResume()
+        val cartItemCount = UserDataUtils().getUserData(this, UserDataFiled.CART_ITEM_COUNT)
+        if (cartItemCount == "0" || cartItemCount == null) {
+            binding.content.header.counterView.isGone = true
+        } else {
+            binding.content.header.counterView.isVisible = true
+            binding.content.header.cartItemsCounter.text = cartItemCount
+        }
+    }
+
     private fun initView() {
         val navController = findNavController(R.id.home_host_fragment)
-        val cartItemCount = UserDataUtils().getUserData(this, UserDataFiled.CART_ITEM_COUNT)
-
         NavigationUI.setupWithNavController(binding.content.bottomNav, navController)
-
-        binding.content.header.counterView.isGone = true
-        cartItemCount?.let {
-            binding.content.header.counterView.isVisible = true
-            binding.content.header.cartItemsCounter.text = it
-        }
         binding.content.header.cart.setOnClickListener {
             navToCartActivity()
         }

@@ -214,7 +214,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
 
     private fun navigateToProductDetailsFragment(product: Product) {
         val intent = Intent(context, ProductDetailsActivity::class.java)
-        intent.putExtra(PRODUCT, product)
+        intent.putExtra(PRODUCT, product.id)
         startActivity(intent)
     }
 

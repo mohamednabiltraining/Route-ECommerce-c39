@@ -10,8 +10,12 @@
             type="com.route.domain.models.Product" />
 
         <variable
-            name="vm"
-            type="com.example.routeEcommerce.ui.productDetails.ProductDetailsViewModel" />
+            name="isWishlist"
+            type="Boolean" />
+
+        <variable
+            name="isCart"
+            type="Boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -20,9 +24,53 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_product_details">
 
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/loading_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <LinearLayout
+            android:id="@+id/error_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.5">
+
+            <TextView
+                android:id="@+id/error_message_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_bold"
+                android:gravity="center_horizontal"
+                android:textColor="@color/blue30"
+                android:textSize="22sp"
+                tools:text="Error message" />
+
+            <Button
+                android:id="@+id/try_again_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:text="@string/try_again"
+                android:textSize="22sp" />
+        </LinearLayout>
+
         <ScrollView
+            android:id="@+id/success_view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@id/add_product_section"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -80,7 +128,7 @@
                     android:layout_marginEnd="16dp"
                     android:backgroundTint="@color/white"
                     android:contentDescription="@string/add_to_wishlist"
-                    android:src="@drawable/ic_wishlist"
+                    android:src="@{isWishlist == false ? @drawable/ic_add : @drawable/ic_like}"
                     app:layout_constraintEnd_toEndOf="@id/section_product_images"
                     app:layout_constraintTop_toTopOf="@id/section_product_images"
                     app:shapeAppearanceOverlay="@style/CircularCorner"
@@ -146,7 +194,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:importantForAccessibility="no"
-                            android:onClick="@{() -> vm.decreaseQuantity()}"
                             android:src="@drawable/ic_minus" />
 
                         <TextView
@@ -165,7 +212,6 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:importantForAccessibility="no"
-                            android:onClick="@{() -> vm.increaseQuantity()}"
                             android:src="@drawable/ic_plus" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -364,7 +410,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
-                android:backgroundTint="@color/blue"
+                android:backgroundTint="@{isCart == false ? @color/blue : @color/white}"
+                android:clickable="@{!isCart}"
                 app:cardCornerRadius="20dp"
                 app:layout_constraintBottom_toBottomOf="@id/total_price"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -377,8 +424,10 @@
                     android:layout_marginHorizontal="32dp"
                     android:layout_marginVertical="11dp"
                     android:drawablePadding="24dp"
+                    android:background="@drawable/rounded_blue_view"
+                    android:padding="6dp"
                     android:text="@string/add_to_cart"
-                    android:textColor="@color/white"
+                    android:textColor="@{isCart == false ? @color/white : @color/gray}"
                     app:drawableStartCompat="@drawable/ic_shoppingcart"
                     app:drawableTint="@color/white" />
             </com.google.android.material.card.MaterialCardView>

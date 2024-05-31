@@ -33,4 +33,9 @@ class ProductsOnlineDataSourceImpl
                 it.toProduct()
             }
         }
+
+        override suspend fun getSpecificProduct(productId: String): Product? {
+            val response = executeApi { webServices.getSpecificProduct(productId) }
+            return response.data?.toProduct()
+        }
     }

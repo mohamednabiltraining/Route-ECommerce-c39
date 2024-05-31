@@ -3,7 +3,7 @@ package com.example.routeEcommerce.ui.home.fragments.home
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
 import com.example.routeEcommerce.base.BaseViewModel
-import com.example.routeEcommerce.ui.home.fragments.home.model.HomeData
+import com.example.routeEcommerce.model.HomeData
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
 import com.route.domain.models.Category

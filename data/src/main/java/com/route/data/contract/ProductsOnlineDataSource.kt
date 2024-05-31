@@ -11,4 +11,6 @@ interface ProductsOnlineDataSource {
         brandId: String?,
         keyword: String?,
     ): List<Product>?
+
+    suspend fun getSpecificProduct(productId: String): Product?
 }
