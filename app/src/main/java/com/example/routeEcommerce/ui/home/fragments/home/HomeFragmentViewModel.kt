@@ -6,9 +6,6 @@ import com.example.routeEcommerce.base.BaseViewModel
 import com.example.routeEcommerce.model.HomeData
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
-import com.route.domain.models.Category
-import com.route.domain.models.Product
-import com.route.domain.models.WishlistItem
 import com.route.domain.usecase.GetCategoriesUseCase
 import com.route.domain.usecase.GetMostSoldProductsUseCase
 import com.route.domain.usecase.cart.AddProductToCartUseCase
@@ -46,16 +43,14 @@ class HomeFragmentViewModel
         override val event: LiveData<HomeContract.Event>
             get() = _event
 
-        private val mostSellingProducts: List<Product>? = null
-        private val categories: List<Category>? = null
-        private val electronicProducts: List<Product>? = null
-        private val wishlist: List<WishlistItem>? = null
-
         override fun doAction(action: HomeContract.Action) {
             when (action) {
                 is HomeContract.Action.InitPage -> {
-                    // initPage(action.token)
-                    initCombine(action.token)
+                    when (action.isHaveCart) {
+                        true -> initCombineWithCart(action.token)
+
+                        false -> initCombineWithOutCart(action.token)
+                    }
                 }
 
                 is HomeContract.Action.AddProductToCart -> {
@@ -104,7 +99,7 @@ class HomeFragmentViewModel
             }
         }
 
-        private fun initCombine(token: String) {
+        private fun initCombineWithCart(token: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 combine(
                     getCategoriesUseCase(),
@@ -129,6 +124,31 @@ class HomeFragmentViewModel
                                 userCartList = userCart.data?.products,
                             )
                     }
+                    if (categoriesList is Resource.Fail || categoriesList is Resource.ServerFail) {
+                        extractViewMessage(categoriesList)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
+                        }
+                    }
+                    if (mostProductsList is Resource.Fail || mostProductsList is Resource.ServerFail) {
+                        extractViewMessage(mostProductsList)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
+                        }
+                    }
+                    if (electronicProducts is Resource.Fail || electronicProducts is Resource.ServerFail) {
+                        extractViewMessage(electronicProducts)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
+                        }
+                    }
+                    if (wishlist is Resource.Fail || wishlist is Resource.ServerFail) {
+                        extractViewMessage(wishlist)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
+                        }
+                    }
+                    if (userCart is Resource.Fail || userCart is Resource.ServerFail) {
+                        extractViewMessage(userCart)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
+                        }
+                    }
                     data
                 }.collect {
                     it?.let { data ->
@@ -146,84 +166,63 @@ class HomeFragmentViewModel
             }
         }
 
-    /*private fun initPage(token: String) {
-        // getMostSellingProducts()
-        // getCategories()
-        // getElectronicProducts()
-        // loadWishlist(token)
-    }*/
-
-        private fun getCategories() {
+        private fun initCombineWithOutCart(token: String) {
             viewModelScope.launch(Dispatchers.IO) {
-                getCategoriesUseCase.invoke()
-                    .collect { resource ->
-                        when (resource) {
-                            is Resource.Success -> {
-                                _state.emit(
-                                    HomeContract.State.Success(
-                                        mostSellingProduct = mostSellingProducts,
-                                        categories = resource.data,
-                                        electronicProducts = electronicProducts,
-                                        wishlist = wishlist,
-                                    ),
-                                )
-                            }
-
-                            else -> {
-                                extractViewMessage(resource)?.let {
-                                    _event.postValue(HomeContract.Event.ShowMessage(it))
-                                }
-                            }
+                combine(
+                    getCategoriesUseCase(),
+                    getMostSoldProductsUseCase(5),
+                    getElectronicProducts("6439d2d167d9aa4ca970649f"),
+                    getLoggedUserWishlistUseCase(token),
+                ) { categoriesList, mostProductsList, electronicProducts, wishlist ->
+                    var data: HomeData? = null
+                    if (categoriesList is Resource.Success &&
+                        mostProductsList is Resource.Success &&
+                        electronicProducts is Resource.Success &&
+                        wishlist is Resource.Success
+                    ) {
+                        data =
+                            HomeData(
+                                category = categoriesList.data,
+                                mostSellingProductList = mostProductsList.data,
+                                electronicsList = electronicProducts.data,
+                                wishListList = wishlist.data,
+                                userCartList = emptyList(),
+                            )
+                    }
+                    if (categoriesList is Resource.Fail || categoriesList is Resource.ServerFail) {
+                        extractViewMessage(categoriesList)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
                         }
                     }
-            }
-        }
-
-        private fun getMostSellingProducts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                getMostSoldProductsUseCase.invoke(5)
-                    .collect { resource ->
-                        when (resource) {
-                            is Resource.Success -> {
-                                _state.emit(
-                                    HomeContract.State.Success(
-                                        mostSellingProduct = resource.data,
-                                        categories = categories,
-                                        electronicProducts = electronicProducts,
-                                    ),
-                                )
-                            }
-
-                            else -> {
-                                extractViewMessage(resource)?.let {
-                                    _event.postValue(HomeContract.Event.ShowMessage(it))
-                                }
-                            }
+                    if (mostProductsList is Resource.Fail || mostProductsList is Resource.ServerFail) {
+                        extractViewMessage(mostProductsList)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
                         }
                     }
-            }
-        }
-
-        private fun getElectronicProducts() {
-            viewModelScope.launch(Dispatchers.IO) {
-                getElectronicProducts.invoke("6439d2d167d9aa4ca970649f")
-                    .collect { resource ->
-                        when (resource) {
-                            is Resource.Success -> {
-                                _state.emit(
-                                    HomeContract.State.Success(
-                                        mostSellingProduct = mostSellingProducts,
-                                        categories = categories,
-                                        electronicProducts = resource.data,
-                                    ),
-                                )
-                            }
-
-                            else -> {
-                                extractViewMessage(resource)
-                            }
+                    if (electronicProducts is Resource.Fail || electronicProducts is Resource.ServerFail) {
+                        extractViewMessage(electronicProducts)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
                         }
                     }
+                    if (wishlist is Resource.Fail || wishlist is Resource.ServerFail) {
+                        extractViewMessage(wishlist)?.let {
+                            _event.postValue(HomeContract.Event.ShowMessage(it))
+                        }
+                    }
+                    data
+                }.collect {
+                    it?.let { data ->
+                        _state.emit(
+                            HomeContract.State.Success(
+                                mostSellingProduct = data.mostSellingProductList,
+                                categories = data.category,
+                                electronicProducts = data.electronicsList,
+                                wishlist = data.wishListList,
+                                cartItems = data.userCartList,
+                            ),
+                        )
+                    }
+                }
             }
         }
 
@@ -267,25 +266,6 @@ class HomeFragmentViewModel
                                     resource.data.data!!,
                                 ),
                             )
-                        }
-
-                        else -> {
-                            extractViewMessage(resource)?.let {
-                                _event.postValue(HomeContract.Event.ShowMessage(it))
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        private fun loadWishlist(token: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                getLoggedUserWishlistUseCase.invoke(token).collect { resource ->
-                    when (resource) {
-                        is Resource.Success -> {
-                            resource.data?.let {
-                            }
                         }
 
                         else -> {

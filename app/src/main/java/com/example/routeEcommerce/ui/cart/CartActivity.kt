@@ -6,6 +6,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.routeEcommerce.R
+import com.example.routeEcommerce.base.ViewMessage
 import com.example.routeEcommerce.databinding.ActivityCartBinding
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils
@@ -52,7 +53,7 @@ class CartActivity : AppCompatActivity() {
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
-                    is CartContract.State.Error -> showError()
+                    is CartContract.State.Error -> showError(state.message)
                     CartContract.State.Idle -> {}
                     CartContract.State.Loading -> showLoadingView()
                     is CartContract.State.Success -> showSussesView(state.cartProducts)
@@ -61,7 +62,10 @@ class CartActivity : AppCompatActivity() {
         }
     }
 
-    private fun showError() {
+    private fun showError(errorMessage: ViewMessage) {
+        binding.content.errorMessage.visibility = View.VISIBLE
+        binding.content.errorMessage.text = errorMessage.message
+        binding.content.loadingView.visibility = View.GONE
     }
 
     private fun showLoadingView() {

@@ -145,7 +145,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
             navToEditProfile(EditEdition.UPDATE_PASSWORD)
         }
         binding.signOutBtn.setOnClickListener {
-            UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.TOKEN, null)
             signOut()
         }
     }
@@ -203,6 +202,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding, ProfileViewModel>()
     }
 
     private fun signOut() {
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.TOKEN, null)
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.CART_ITEM_COUNT, null)
         startActivity(Intent(requireActivity(), SplashActivity::class.java))
         requireActivity().finish()
     }

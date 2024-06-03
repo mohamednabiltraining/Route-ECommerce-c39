@@ -102,6 +102,7 @@ class RegisterFragment : BaseFragment<FragmentRegisterBinding, RegisterViewModel
         UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.ROLE, userData.user?.role)
         UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.NAME, userData.user?.name)
         UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.EMAIL, userData.user?.email)
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.CART_ITEM_COUNT, null)
         startActivity(Intent(activity, MainActivity::class.java))
         requireActivity().finish()
     }

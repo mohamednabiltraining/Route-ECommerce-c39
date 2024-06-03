@@ -56,7 +56,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
     private fun loadPage() {
         val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         if (token != null) {
-            viewModel.doAction(HomeContract.Action.InitPage(token))
+            val isHaveCart =
+                UserDataUtils().getUserData(
+                    requireContext(),
+                    UserDataFiled.CART_ITEM_COUNT,
+                ) != null
+            viewModel.doAction(HomeContract.Action.InitPage(token, isHaveCart))
         } else {
             showDialog(
                 message = "Login Again",
@@ -123,7 +128,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
             }
 
             is HomeContract.State.Success -> {
-                // showSuccess()
+                showSuccess()
                 state.cartItems?.let {
                     categoryProductsAdapter.setCartItemsData(
                         it.map { cartItem ->
@@ -136,6 +141,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
                             cartItem.product?.id
                         },
                     )
+                    UserDataUtils().saveUserInfo(
+                        requireContext(),
+                        UserDataFiled.CART_ITEM_COUNT,
+                        state.cartItems.size.toString(),
+                    )
+                    (activity as MainActivity).updateCartCount()
                 }
                 state.wishlist?.let {
                     categoryProductsAdapter.setWishlistData(
