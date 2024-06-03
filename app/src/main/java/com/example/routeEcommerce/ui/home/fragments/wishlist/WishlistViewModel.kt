@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.routeEcommerce.base.BaseViewModel
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
+import com.route.domain.usecase.cart.AddProductToCartUseCase
 import com.route.domain.usecase.wishlist.DeleteProductFromWishlistUseCase
 import com.route.domain.usecase.wishlist.GetLoggedUserWishlistUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,6 +20,7 @@ class WishlistViewModel
     @Inject
     constructor(
         private val getLoggedUserWishlistUseCase: GetLoggedUserWishlistUseCase,
+        private val addProductToCartUseCase: AddProductToCartUseCase,
         private val deleteProductFromWishlist: DeleteProductFromWishlistUseCase,
     ) : BaseViewModel(), WishlistContract.WishlistViewModel {
         private val _event = SingleLiveEvent<WishlistContract.Event>()
@@ -37,6 +39,37 @@ class WishlistViewModel
                         action.token,
                         action.productId,
                     )
+
+                is WishlistContract.Action.AddProductToCart ->
+                    addProductToCart(
+                        action.token,
+                        action.productId,
+                    )
+            }
+        }
+
+        private fun addProductToCart(
+            token: String,
+            productId: String,
+        ) {
+            viewModelScope.launch {
+                addProductToCartUseCase(token, productId).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            _event.postValue(
+                                WishlistContract.Event.ProductAddedToCartSuccessfully(
+                                    resource.data?.products,
+                                ),
+                            )
+                        }
+
+                        else -> {
+                            extractViewMessage(resource)?.let {
+                                _event.postValue(WishlistContract.Event.ErrorMessage(it))
+                            }
+                        }
+                    }
+                }
             }
         }
 

@@ -10,16 +10,17 @@ import com.example.routeEcommerce.R
 import com.example.routeEcommerce.databinding.ItemCartBinding
 import com.example.routeEcommerce.utils.MyDiffUtil
 import com.route.domain.models.CartItem
+import com.route.domain.models.Product
 
 class CartAdapter(
     private val context: Context,
 ) :
     RecyclerView.Adapter<CartAdapter.ViewHolder>() {
-    private var cartItemsList: List<CartItem?> = emptyList()
+    private var cartItemsList: List<CartItem<Product>?> = emptyList()
 
     inner class ViewHolder(val itemCartBinding: ItemCartBinding) :
         RecyclerView.ViewHolder(itemCartBinding.root) {
-        fun bind(cartItem: CartItem?) {
+        fun bind(cartItem: CartItem<Product>?) {
             itemCartBinding.productQuantity.text = cartItem?.count.toString()
             if (cartItem?.product?.title?.length!! >= 24) {
                 val newTitle = cartItem.product?.title
@@ -82,7 +83,7 @@ class CartAdapter(
         }
     }
 
-    fun bindCartItemsList(cartItemsList: List<CartItem?>) {
+    fun bindCartItemsList(cartItemsList: List<CartItem<Product>?>) {
         val myDiffUtil =
             MyDiffUtil(this.cartItemsList, cartItemsList) { oldItem, newItem ->
                 when {

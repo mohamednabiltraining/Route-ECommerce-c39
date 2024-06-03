@@ -3,6 +3,7 @@ package com.example.routeEcommerce.ui.cart
 import androidx.lifecycle.LiveData
 import com.example.routeEcommerce.base.ViewMessage
 import com.route.domain.models.Cart
+import com.route.domain.models.Product
 import kotlinx.coroutines.flow.StateFlow
 
 class CartContract {
@@ -34,7 +35,7 @@ class CartContract {
 
         data object Loading : State()
 
-        data class Success(val cartProducts: Cart?) : State()
+        data class Success(val cartProducts: Cart<Product>?) : State()
 
         data class Error(val message: ViewMessage) : State()
     }

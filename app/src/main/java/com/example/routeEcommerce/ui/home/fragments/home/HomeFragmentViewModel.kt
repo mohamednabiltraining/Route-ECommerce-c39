@@ -11,6 +11,8 @@ import com.route.domain.models.Product
 import com.route.domain.models.WishlistItem
 import com.route.domain.usecase.GetCategoriesUseCase
 import com.route.domain.usecase.GetMostSoldProductsUseCase
+import com.route.domain.usecase.cart.AddProductToCartUseCase
+import com.route.domain.usecase.cart.GetLoggedUserCartUseCase
 import com.route.domain.usecase.product.GetCategoryProductsUseCase
 import com.route.domain.usecase.wishlist.AddProductToWishlistUseCase
 import com.route.domain.usecase.wishlist.DeleteProductFromWishlistUseCase
@@ -31,6 +33,8 @@ class HomeFragmentViewModel
         private val getMostSoldProductsUseCase: GetMostSoldProductsUseCase,
         private val getElectronicProducts: GetCategoryProductsUseCase,
         private val getLoggedUserWishlistUseCase: GetLoggedUserWishlistUseCase,
+        private val getLoggedUserCartUseCase: GetLoggedUserCartUseCase,
+        private val addProductToCartUseCase: AddProductToCartUseCase,
         private val addProductToWishlistUseCase: AddProductToWishlistUseCase,
         private val deleteProductFromWishlistUseCase: DeleteProductFromWishlistUseCase,
     ) : BaseViewModel(), HomeContract.ViewModel {
@@ -54,6 +58,10 @@ class HomeFragmentViewModel
                     initCombine(action.token)
                 }
 
+                is HomeContract.Action.AddProductToCart -> {
+                    addProductToCart(action.token, action.productId)
+                }
+
                 is HomeContract.Action.AddProductToWishlist -> {
                     addProductToWishlist(
                         action.token,
@@ -70,19 +78,47 @@ class HomeFragmentViewModel
             }
         }
 
+        private fun addProductToCart(
+            token: String,
+            productId: String,
+        ) {
+            viewModelScope.launch {
+                addProductToCartUseCase.invoke(token, productId).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> {
+                            _event.postValue(
+                                HomeContract.Event
+                                    .ProductAddedToCartSuccessfully(
+                                        resource.data?.products!!,
+                                    ),
+                            )
+                        }
+
+                        else -> {
+                            extractViewMessage(resource)?.let {
+                                _event.postValue(HomeContract.Event.ShowMessage(it))
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         private fun initCombine(token: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 combine(
-                    getCategoriesUseCase.invoke(),
-                    getMostSoldProductsUseCase.invoke(5),
-                    getElectronicProducts.invoke("6439d2d167d9aa4ca970649f"),
-                    getLoggedUserWishlistUseCase.invoke(token),
-                ) { categoriesList, mostProductsList, electronicProducts, wishlist ->
+                    getCategoriesUseCase(),
+                    getMostSoldProductsUseCase(5),
+                    getElectronicProducts("6439d2d167d9aa4ca970649f"),
+                    getLoggedUserWishlistUseCase(token),
+                    getLoggedUserCartUseCase(token),
+                ) { categoriesList, mostProductsList, electronicProducts, wishlist, userCart ->
                     var data: HomeData? = null
                     if (categoriesList is Resource.Success &&
                         mostProductsList is Resource.Success &&
                         electronicProducts is Resource.Success &&
-                        wishlist is Resource.Success
+                        wishlist is Resource.Success &&
+                        userCart is Resource.Success
                     ) {
                         data =
                             HomeData(
@@ -90,6 +126,7 @@ class HomeFragmentViewModel
                                 mostSellingProductList = mostProductsList.data,
                                 electronicsList = electronicProducts.data,
                                 wishListList = wishlist.data,
+                                userCartList = userCart.data?.products,
                             )
                     }
                     data
@@ -101,6 +138,7 @@ class HomeFragmentViewModel
                                 categories = data.category,
                                 electronicProducts = data.electronicsList,
                                 wishlist = data.wishListList,
+                                cartItems = data.userCartList,
                             ),
                         )
                     }

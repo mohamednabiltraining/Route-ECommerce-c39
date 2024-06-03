@@ -14,8 +14,9 @@ import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.BaseFragment
 import com.example.routeEcommerce.base.showDialog
 import com.example.routeEcommerce.databinding.FragmentHomeBinding
+import com.example.routeEcommerce.ui.home.activity.MainActivity
+import com.example.routeEcommerce.ui.home.fragments.commenAdapters.ProductsAdapter
 import com.example.routeEcommerce.ui.home.fragments.home.adapters.CategoriesAdapter
-import com.example.routeEcommerce.ui.home.fragments.home.adapters.ProductsAdapter
 import com.example.routeEcommerce.ui.productDetails.ProductDetailsActivity
 import com.example.routeEcommerce.ui.userAuthentication.activity.UserAuthenticationActivity
 import com.example.routeEcommerce.utils.UserDataFiled
@@ -80,6 +81,21 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
 
     private fun onEventChange(event: HomeContract.Event) {
         when (event) {
+            is HomeContract.Event.ProductAddedToCartSuccessfully -> {
+                val cartItemsIds =
+                    event.cartItems?.map {
+                        it.product
+                    }
+                UserDataUtils().saveUserInfo(
+                    requireContext(),
+                    UserDataFiled.CART_ITEM_COUNT,
+                    event.cartItems?.size.toString(),
+                )
+                categoryProductsAdapter.setCartItemsData(cartItemsIds ?: emptyList())
+                mostSellingProductsAdapter.setCartItemsData(cartItemsIds ?: emptyList())
+                (activity as MainActivity).updateCartCount()
+            }
+
             is HomeContract.Event.ShowMessage -> {
                 Log.e("Message->", event.viewMessage.message)
                 showErrorView(event.viewMessage.message)
@@ -108,6 +124,19 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
 
             is HomeContract.State.Success -> {
                 // showSuccess()
+                state.cartItems?.let {
+                    categoryProductsAdapter.setCartItemsData(
+                        it.map { cartItem ->
+                            cartItem.product?.id
+                        },
+                    )
+
+                    mostSellingProductsAdapter.setCartItemsData(
+                        it.map { cartItem ->
+                            cartItem.product?.id
+                        },
+                    )
+                }
                 state.wishlist?.let {
                     categoryProductsAdapter.setWishlistData(
                         it.map { item ->
@@ -182,6 +211,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
                 viewModel.doAction(HomeContract.Action.RemoveProductFromWishlist(it, product.id!!))
             }
         }
+        categoryProductsAdapter.addProductToCartClicked = { product ->
+            token?.let {
+                viewModel.doAction(HomeContract.Action.AddProductToCart(it, product.id!!))
+            }
+        }
     }
 
     private fun initMostProductAdapter(token: String?) {
@@ -197,6 +231,11 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         mostSellingProductsAdapter.removeProductFromWishListClicked = { product ->
             token?.let {
                 viewModel.doAction(HomeContract.Action.RemoveProductFromWishlist(it, product.id!!))
+            }
+        }
+        mostSellingProductsAdapter.addProductToCartClicked = { product ->
+            token?.let {
+                viewModel.doAction(HomeContract.Action.AddProductToCart(it, product.id!!))
             }
         }
     }

@@ -4,6 +4,7 @@ import com.route.data.api.webServices.CartWebServices
 import com.route.data.contract.CartOnlineDataSource
 import com.route.data.executeApi
 import com.route.domain.models.Cart
+import com.route.domain.models.Product
 import javax.inject.Inject
 
 class CartOnlineDataSourceImpl
@@ -12,36 +13,36 @@ class CartOnlineDataSourceImpl
         override suspend fun addProductToCart(
             token: String,
             productId: String,
-        ): Cart? {
+        ): Cart<String>? {
             val response = executeApi { webServices.addProductToCart(token, productId) }
-            return response.data
+            return response.data?.toCart()
         }
 
         override suspend fun updateCartProductQuantity(
             token: String,
             cartProductId: String,
             productCount: String,
-        ): Cart? {
+        ): Cart<Product>? {
             val response =
                 executeApi {
                     webServices.updateCartProductQuantity(token, cartProductId, productCount)
                 }
-            return response.data
+            return response.data?.toCart()
         }
 
-        override suspend fun getLoggedUserCart(token: String): Cart? {
+        override suspend fun getLoggedUserCart(token: String): Cart<Product>? {
             val response = executeApi { webServices.getLoggedUserCart(token) }
-            return response.data
+            return response.data?.toCart()
         }
 
         override suspend fun removeSpecificCartItem(
             token: String,
             cartProductId: String,
-        ): Cart? {
+        ): Cart<Product>? {
             val response =
                 executeApi {
                     webServices.removeSpecificCartItem(token, cartProductId)
                 }
-            return response.data
+            return response.data?.toCart()
         }
     }

@@ -1,4 +1,4 @@
-package com.example.routeEcommerce.ui.home.fragments.home.adapters
+package com.example.routeEcommerce.ui.home.fragments.commenAdapters
 
 import android.content.Context
 import android.graphics.Paint
@@ -16,6 +16,7 @@ class ProductsAdapter(private val context: Context) :
     RecyclerView.Adapter<ProductsAdapter.ViewHolder>() {
     private var products: List<Product?> = emptyList()
     private var wishlistItems: List<String?> = emptyList()
+    private var cartItems: List<String?> = emptyList()
 
     inner class ViewHolder(
         private val context: Context,
@@ -24,17 +25,24 @@ class ProductsAdapter(private val context: Context) :
         RecyclerView.ViewHolder(itemProductBinding.root) {
         fun bind(
             product: Product?,
-            wishlistItems: List<String?>?,
+            wishlistItems: List<String?>,
+            cartItems: List<String?>,
         ) {
             itemProductBinding.product = product
-            if (wishlistItems != null) {
-                for (item in wishlistItems) {
-                    if (product?.id == item) {
-                        itemProductBinding.isWishlist = true
-                        break
-                    } else {
-                        itemProductBinding.isWishlist = false
-                    }
+            for (item in wishlistItems) {
+                if (product?.id == item) {
+                    itemProductBinding.isWishlist = true
+                    break
+                } else {
+                    itemProductBinding.isWishlist = false
+                }
+            }
+            for (item in cartItems) {
+                if (product?.id == item) {
+                    itemProductBinding.isItemCart = true
+                    break
+                } else {
+                    itemProductBinding.isItemCart = false
                 }
             }
             itemProductBinding.executePendingBindings()
@@ -76,7 +84,7 @@ class ProductsAdapter(private val context: Context) :
         position: Int,
     ) {
         val product = products[position]
-        holder.bind(product, wishlistItems)
+        holder.bind(product, wishlistItems, cartItems)
         openProductDetails?.let {
             holder.itemView.setOnClickListener {
                 openProductDetails?.invoke(product!!)
@@ -88,20 +96,18 @@ class ProductsAdapter(private val context: Context) :
                 when (holder.itemProductBinding.isWishlist) {
                     true -> {
                         removeProductFromWishListClicked?.invoke(product!!)
-                        // holder.itemProductBinding.isWishlist = false
                     }
 
                     else -> {
                         addProductToWishListClicked?.invoke(product!!)
-                        // holder.itemProductBinding.isWishlist = true
                     }
                 }
-                // notifyItemChanged(position)
             }
         }
 
         addProductToCartClicked?.let {
             holder.itemProductBinding.addToCartBtn.setOnClickListener {
+                if (holder.itemProductBinding.isItemCart == true) return@setOnClickListener
                 addProductToCartClicked?.invoke(product!!)
             }
         }
@@ -136,6 +142,11 @@ class ProductsAdapter(private val context: Context) :
 
     fun setWishlistData(newWishlist: List<String?>) {
         this.wishlistItems = newWishlist
+        notifyDataSetChanged()
+    }
+
+    fun setCartItemsData(newCartListIds: List<String?>) {
+        this.cartItems = newCartListIds
         notifyDataSetChanged()
     }
 

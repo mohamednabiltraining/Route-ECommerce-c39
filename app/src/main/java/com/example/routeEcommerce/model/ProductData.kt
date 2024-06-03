@@ -4,5 +4,6 @@ import com.route.domain.models.Product
 
 data class ProductData(
     val product: Product?,
-    val wishList: Boolean?,
+    val isWishlist: Boolean?,
+    val isCart: Boolean?,
 )

@@ -10,6 +10,7 @@ import com.example.routeEcommerce.databinding.ActivityCartBinding
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils
 import com.route.domain.models.Cart
+import com.route.domain.models.Product
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -67,7 +68,7 @@ class CartActivity : AppCompatActivity() {
         binding.content.loadingView.visibility = View.VISIBLE
     }
 
-    private fun showSussesView(cartProducts: Cart?) {
+    private fun showSussesView(cartProducts: Cart<Product>?) {
         binding.content.loadingView.visibility = View.GONE
 
         UserDataUtils().saveUserInfo(

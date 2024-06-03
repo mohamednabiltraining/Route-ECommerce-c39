@@ -12,6 +12,10 @@
         <variable
             name="isWishlist"
             type="Boolean" />
+
+        <variable
+            name="isItemCart"
+            type="Boolean" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -50,7 +54,8 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/product_img" />
+                app:layout_constraintTop_toBottomOf="@id/product_img"
+                tools:text="asdasdasdad sasadasddad" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/add_to_wishlist_btn"
@@ -140,11 +145,10 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginStart="28dp"
-                android:src="@drawable/ic_plus_circle"
+                android:src="@{isItemCart == false ? @drawable/ic_plus_circle : @drawable/ic_shoppingcart}"
                 app:layout_constraintBottom_toBottomOf="@id/review_value_tv"
                 app:layout_constraintStart_toEndOf="@id/review_value_tv"
                 app:layout_constraintEnd_toEndOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

@@ -1,9 +1,9 @@
-package com.route.data.api.model
+package com.route.data.api.model.cart
 
 import com.google.gson.annotations.SerializedName
 import com.route.domain.models.Cart
 
-data class CartDto(
+data class CartForProductIdDto(
     @field:SerializedName("cartOwner")
     val cartOwner: String? = null,
     @field:SerializedName("totalCartPrice")
@@ -11,15 +11,15 @@ data class CartDto(
     @field:SerializedName("_id")
     val id: String? = null,
     @field:SerializedName("products")
-    val products: List<CardItemDto?>? = null,
+    val productsIdList: List<CartItemsForProductIdDto>? = null,
 ) {
-    fun toCart(): Cart {
+    fun toCart(): Cart<String> {
         return Cart(
             cartOwner,
             totalCartPrice,
             id,
-            products?.map {
-                it?.toCartItem()
+            productsIdList?.map {
+                it.toCartItem()
             },
         )
     }

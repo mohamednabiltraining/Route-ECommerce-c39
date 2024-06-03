@@ -3,6 +3,7 @@ package com.example.routeEcommerce.ui.productDetails
 import android.content.Intent
 import android.graphics.Paint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,21 +24,18 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class ProductDetailsActivity : AppCompatActivity() {
     private val viewModel: ProductDetailsContract.ProductDetailsViewModel by viewModels<ProductDetailsViewModel>()
-    private var _binding: ActivityProductDetailsBinding? = null
-    private val binding get() = _binding!!
+    private lateinit var binding: ActivityProductDetailsBinding
 
-    private val imageViewPagerAdapter = ImageViewPagerAdapter()
+    private val imageViewPagerAdapter by lazy { ImageViewPagerAdapter() }
 
-    // var product: Product? = null
     var currentImagePosition = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        _binding = ActivityProductDetailsBinding.inflate(layoutInflater)
+        binding = ActivityProductDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initToolbar()
         observeData()
-        // getProduct()
         loadProductDetails()
     }
 
@@ -65,7 +63,12 @@ class ProductDetailsActivity : AppCompatActivity() {
                     showSnackBar(event.message)
                 }
 
-                is ProductDetailsContract.Event.AddedSuccessfully -> {
+                is ProductDetailsContract.Event.ProductAddedToCartSuccessfully -> {
+                    UserDataUtils().saveUserInfo(
+                        this,
+                        UserDataFiled.CART_ITEM_COUNT,
+                        event.numberCartProduct.toString(),
+                    )
                     binding.contentProduct.isCart = event.isCart
                     showSnackBar(event.message)
                 }
@@ -83,6 +86,7 @@ class ProductDetailsActivity : AppCompatActivity() {
                         showSuccessView(
                             state.product,
                             state.isWishlist,
+                            state.isCart,
                         )
                 }
             }
@@ -99,10 +103,11 @@ class ProductDetailsActivity : AppCompatActivity() {
 
     private fun showSuccessView(
         product: Product?,
-        wishlist: Boolean?,
+        isWishlist: Boolean?,
+        isCart: Boolean?,
     ) {
         idleView()
-        initView(product, wishlist)
+        initView(product, isWishlist, isCart)
     }
 
     private fun idleView() {
@@ -143,104 +148,117 @@ class ProductDetailsActivity : AppCompatActivity() {
     private fun initView(
         product: Product?,
         isWishlist: Boolean?,
+        isCart: Boolean?,
     ) {
         val token = UserDataUtils().getUserData(this, UserDataFiled.TOKEN)
-        if (product != null) {
-            binding.contentProduct.product = product
-            isWishlist?.let {
-                binding.contentProduct.isWishlist = it
+        product?.let { mProduct ->
+            isWishlist?.let { wishlist ->
+                binding.contentProduct.isWishlist = wishlist
             }
-        }
-        if (product?.priceAfterDiscount != null) {
-            binding.contentProduct.productPrice.text =
-                "EGP ${"%,d".format(product.priceAfterDiscount)}"
-            binding.contentProduct.productOldPrice.isVisible = true
-            binding.contentProduct.productOldPrice.text = "EGP ${"%,d".format(product.price)}"
-            binding.contentProduct.productOldPrice.paintFlags =
-                binding.contentProduct.productOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-        } else {
-            binding.contentProduct.productPrice.text = "EGP ${"%,d".format(product?.price)}"
-            binding.contentProduct.productOldPrice.isVisible = false
-        }
-        binding.contentProduct.ratingsQuantity.text = "(${"%,d".format(product?.ratingsQuantity)})"
-        binding.contentProduct.soldCounter.text = "${"%,d".format(product?.sold)}"
-
-        binding.contentProduct.addProduct.setOnClickListener {
-            increaseQuantity(product)
-        }
-        binding.contentProduct.removeProduct.setOnClickListener {
-            decreaseQuantity(product)
-        }
-
-        binding.contentProduct.addToCart.setOnClickListener {
-            token?.let {
-                viewModel.doAction(
-                    ProductDetailsContract.Action.AddProductToCart(
-                        it,
-                        product?.id ?: TODO("Throw exception"),
-                        binding.contentProduct.productQuantity.text.toString(),
-                    ),
-                )
+            isCart?.let {
+                binding.contentProduct.isCart = it
             }
-        }
-        binding.contentProduct.fabAddToWishlist.setOnClickListener {
-            when (binding.contentProduct.isWishlist) {
-                true -> {
-                    token?.let {
-                        viewModel.doAction(
-                            ProductDetailsContract.Action.RemoveProductFromWishlist(
-                                it,
-                                product?.id ?: TODO("Throw exception"),
-                            ),
-                        )
-                    }
+            binding.contentProduct.product = mProduct
+            binding.contentProduct.ratingsQuantity.text =
+                "(${"%,d".format(mProduct.ratingsQuantity)})"
+            binding.contentProduct.soldCounter.text = "${"%,d".format(mProduct.sold)}"
+
+            if (mProduct.priceAfterDiscount != null) {
+                binding.contentProduct.productPrice.text =
+                    "EGP ${"%,d".format(mProduct.priceAfterDiscount)}"
+                Log.e("TAG", "EGP ${"%,d".format(mProduct.priceAfterDiscount)}")
+                binding.contentProduct.productOldPrice.isVisible = true
+                binding.contentProduct.productOldPrice.text = "EGP ${"%,d".format(mProduct.price)}"
+                binding.contentProduct.productOldPrice.paintFlags =
+                    binding.contentProduct.productOldPrice.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+                binding.contentProduct.totalPrice.text =
+                    "EGP ${"%,d".format(mProduct.priceAfterDiscount)}"
+            } else {
+                binding.contentProduct.productPrice.text = "EGP ${"%,d".format(mProduct.price)}"
+                binding.contentProduct.productOldPrice.isVisible = false
+                binding.contentProduct.totalPrice.text =
+                    "EGP ${"%,d".format(mProduct.price)}"
+            }
+            binding.contentProduct.addProduct.setOnClickListener {
+                increaseQuantity(mProduct)
+            }
+            binding.contentProduct.removeProduct.setOnClickListener {
+                decreaseQuantity(mProduct)
+            }
+
+            binding.contentProduct.addToCart.setOnClickListener {
+                if (binding.contentProduct.isCart == true) return@setOnClickListener
+                token?.let {
+                    viewModel.doAction(
+                        ProductDetailsContract.Action.AddProductToCart(
+                            it,
+                            mProduct.id ?: TODO("Throw exception"),
+                            binding.contentProduct.productQuantity.text.toString(),
+                        ),
+                    )
                 }
-
-                false -> {
-                    token?.let {
-                        viewModel.doAction(
-                            ProductDetailsContract.Action.AddProductToWishlist(
-                                it,
-                                product?.id ?: TODO("Throw exception"),
-                            ),
-                        )
-                    }
-                }
-
-                else -> return@setOnClickListener
             }
+            binding.contentProduct.fabAddToWishlist.setOnClickListener {
+                when (binding.contentProduct.isWishlist) {
+                    true -> {
+                        token?.let {
+                            viewModel.doAction(
+                                ProductDetailsContract.Action.RemoveProductFromWishlist(
+                                    it,
+                                    mProduct.id ?: TODO("Throw exception"),
+                                ),
+                            )
+                        }
+                    }
+
+                    false -> {
+                        token?.let {
+                            viewModel.doAction(
+                                ProductDetailsContract.Action.AddProductToWishlist(
+                                    it,
+                                    mProduct.id ?: TODO("Throw exception"),
+                                ),
+                            )
+                        }
+                    }
+
+                    else -> return@setOnClickListener
+                }
+            }
+            setUpViewPagerAdapter(mProduct)
         }
-        setUpViewPagerAdapter(product)
     }
 
-    private fun increaseQuantity(product: Product?) {
+    private fun increaseQuantity(product: Product) {
         val currentQuantity = binding.contentProduct.productQuantity.text.toString().toInt()
         binding.contentProduct.productQuantity.text = currentQuantity.plus(1).toString()
+        val newQuantity = binding.contentProduct.productQuantity.text.toString().toInt()
         val totalPrice =
-            if (product?.priceAfterDiscount != null) {
-                currentQuantity * (product.priceAfterDiscount ?: 0)
+            if (product.priceAfterDiscount != null) {
+                newQuantity * (product.priceAfterDiscount ?: 0)
             } else {
-                currentQuantity * (product?.price ?: 0)
+                newQuantity * (product.price ?: 0)
             }
-        binding.contentProduct.totalPrice.text = totalPrice.toString()
+
+        binding.contentProduct.totalPrice.text = "EGP ${"%,d".format(totalPrice)}"
     }
 
-    private fun decreaseQuantity(product: Product?) {
+    private fun decreaseQuantity(product: Product) {
         val currentQuantity = binding.contentProduct.productQuantity.text.toString().toInt()
         if (currentQuantity == 1) return
         binding.contentProduct.productQuantity.text = currentQuantity.minus(1).toString()
-
+        val newQuantity = binding.contentProduct.productQuantity.text.toString().toInt()
         val totalPrice =
-            if (product?.priceAfterDiscount != null) {
-                currentQuantity * (product.priceAfterDiscount ?: 0)
+            if (product.priceAfterDiscount != null) {
+                newQuantity * (product.priceAfterDiscount ?: 0)
             } else {
-                currentQuantity * (product?.price ?: 0)
+                newQuantity * (product.price ?: 0)
             }
-        binding.contentProduct.totalPrice.text = totalPrice.toString()
+        binding.contentProduct.totalPrice.text = "EGP ${"%,d".format(totalPrice)}"
     }
 
-    private fun setUpViewPagerAdapter(product: Product?) {
-        product?.images?.let { imageViewPagerAdapter.bindCategories(it) }
+    private fun setUpViewPagerAdapter(product: Product) {
+        product.images?.let { imageViewPagerAdapter.bindCategories(it) }
         binding.contentProduct.productImageVp.adapter = imageViewPagerAdapter
         binding.contentProduct.productImageVp.currentItem = currentImagePosition
         binding.contentProduct.dotsIndicator.attachTo(binding.contentProduct.productImageVp)
@@ -250,25 +268,10 @@ class ProductDetailsActivity : AppCompatActivity() {
         }
     }
 
-    private fun navigateToImageDisplay(product: Product?) {
+    private fun navigateToImageDisplay(product: Product) {
         val intent = Intent(this, DisplayProductImagesActivity::class.java)
         intent.putExtra(Constants.PASS_POSITION, currentImagePosition)
-        intent.putExtra(Constants.PASS_IMAGE_LIST, product?.images?.toTypedArray())
+        intent.putExtra(Constants.PASS_IMAGE_LIST, product.images?.toTypedArray())
         startActivity(intent)
-    }
-
-    /*private fun getProduct() {
-        product =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                intent.getParcelableExtra(PRODUCT, Product::class.java)
-            } else {
-                @Suppress("DEPRECATION")
-                intent.getParcelableExtra(PRODUCT)
-            }
-    }*/
-
-    override fun onDestroy() {
-        super.onDestroy()
-        _binding = null
     }
 }

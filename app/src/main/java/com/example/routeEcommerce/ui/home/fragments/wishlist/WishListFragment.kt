@@ -11,6 +11,7 @@ import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.BaseFragment
 import com.example.routeEcommerce.base.showDialog
 import com.example.routeEcommerce.databinding.FragmentWishlistBinding
+import com.example.routeEcommerce.ui.home.activity.MainActivity
 import com.example.routeEcommerce.ui.home.fragments.wishlist.adapter.WishListAdapter
 import com.example.routeEcommerce.ui.userAuthentication.activity.UserAuthenticationActivity
 import com.example.routeEcommerce.utils.UserDataFiled
@@ -63,6 +64,14 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
         viewModel.event.observe(viewLifecycleOwner) { event ->
             when (event) {
                 is WishlistContract.Event.ErrorMessage -> showError(event.errorMessage.message)
+                is WishlistContract.Event.ProductAddedToCartSuccessfully -> {
+                    UserDataUtils().saveUserInfo(
+                        requireContext(),
+                        UserDataFiled.CART_ITEM_COUNT,
+                        event.cartItems?.size.toString(),
+                    )
+                    (activity as MainActivity).updateCartCount()
+                }
             }
         }
         lifecycleScope.launch {
@@ -89,6 +98,11 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
             binding.recyclerView.isVisible = true
             binding.recyclerView.adapter = adapter
             adapter.bindItems(wishlist)
+            adapter.addProductToCart = { productId ->
+                token?.let {
+                    viewModel.doAction(WishlistContract.Action.AddProductToCart(it, productId))
+                }
+            }
             adapter.removeProductFromWishlist = { productId ->
                 token?.let {
                     viewModel.doAction(WishlistContract.Action.RemoveProduct(it, productId))

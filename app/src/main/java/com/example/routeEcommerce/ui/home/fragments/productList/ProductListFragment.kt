@@ -14,8 +14,11 @@ import com.example.routeEcommerce.Constants.PRODUCT
 import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.BaseFragment
 import com.example.routeEcommerce.databinding.FragmentProductListBinding
-import com.example.routeEcommerce.ui.home.fragments.productList.adapter.ProductsAdapter
+import com.example.routeEcommerce.ui.home.activity.MainActivity
+import com.example.routeEcommerce.ui.home.fragments.commenAdapters.ProductsAdapter
 import com.example.routeEcommerce.ui.productDetails.ProductDetailsActivity
+import com.example.routeEcommerce.utils.UserDataFiled
+import com.example.routeEcommerce.utils.UserDataUtils
 import com.route.domain.contract.products.SortBy
 import com.route.domain.models.Brand
 import com.route.domain.models.Product
@@ -39,7 +42,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
     }
 
     private val args: ProductListFragmentArgs by navArgs()
-    private val productsAdapter = ProductsAdapter()
+    private val productsAdapter by lazy { ProductsAdapter(requireContext()) }
     lateinit var searchKeyWord: String
     private lateinit var brandsList: List<Brand>
 
@@ -53,10 +56,10 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         initView()
         observeData()
         loadData()
-        // viewModel.doAction(ProductContract.Action.LoadProducts(args.categoryId))
     }
 
     private fun loadData() {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         if (args.subcategory?.id != null) {
             viewModel.doAction(
                 ProductContract.Action.LoadProductsWithFilter(
@@ -67,25 +70,66 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
                 ),
             )
         } else {
-            viewModel.doAction(ProductContract.Action.LoadProducts(args.categoryId))
+            token?.let {
+                viewModel.doAction(ProductContract.Action.LoadProducts(it, args.categoryId))
+            }
         }
     }
 
     private fun observeData() {
-        viewModel.event.observe(viewLifecycleOwner) {
-            when (it) {
+        viewModel.event.observe(viewLifecycleOwner) { event ->
+            when (event) {
                 is ProductContract.Event.ShowMessage -> {
-                    showErrorView(it.message.message)
+                    showErrorView(event.message.message)
+                }
+
+                is ProductContract.Event.AddedSuccessfully -> {
+                    productsAdapter.setWishlistData(event.wishlistItemsId)
+                }
+
+                is ProductContract.Event.ProductAddedToCartSuccessfully -> {
+                    val cartItemsIds =
+                        event.cartItems?.map {
+                            it.product
+                        }
+                    UserDataUtils().saveUserInfo(
+                        requireContext(),
+                        UserDataFiled.CART_ITEM_COUNT,
+                        event.cartItems?.size.toString(),
+                    )
+                    productsAdapter.setCartItemsData(cartItemsIds ?: emptyList())
+                    (activity as MainActivity).updateCartCount()
+                }
+
+                is ProductContract.Event.RemovedSuccessfully -> {
+                    productsAdapter.setWishlistData(event.wishlistItemsId)
                 }
             }
         }
         lifecycleScope.launch {
-            viewModel.state.collect {
-                when (it) {
+            viewModel.state.collect { state ->
+                when (state) {
                     ProductContract.State.Loading -> showLoadingView()
                     is ProductContract.State.Success -> {
-                        Log.e("productList", "${it.productList?.size}")
-                        showSuccessView(it.productList)
+                        Log.e("productList", "${state.productList?.size}")
+                        state.productList?.let { response ->
+                            productsAdapter.bindProducts(response)
+                            showSuccessView()
+                        }
+                        state.wishlist?.let {
+                            productsAdapter.setWishlistData(
+                                it.map { wishlistItem ->
+                                    wishlistItem.id
+                                },
+                            )
+                        }
+                        state.cartList?.let {
+                            productsAdapter.setCartItemsData(
+                                it.map { cartItem ->
+                                    cartItem.product?.id
+                                },
+                            )
+                        }
                     }
                 }
             }
@@ -94,17 +138,11 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         viewModel.allProductBrands.observe(viewLifecycleOwner) {
             setAllProductsBrand(it)
         }
-//        viewModel.categoryProductsList.observe(viewLifecycleOwner) { productsList ->
-//            productsList?.let {
-//                showSuccessView(it)
-//            }
-//        }
-//        viewModel.viewMessage.observe(viewLifecycleOwner) {
-//            showErrorView(it.message)
-//        }
     }
 
     private fun initView() {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
+
         binding.categoryProductsRv.adapter = productsAdapter
         productsAdapter.openProductDetails = {
             navigateToProductDetails(it)
@@ -115,7 +153,6 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
                 subcategory.text = getString(R.string.subcategory_filter, args.subcategory?.name)
                 cancelSubcategory.setOnClickListener {
                     binding.subcategoriesFilter.isGone = true
-                    // viewModel.getCategoryProducts(args.categoryId, null)
                 }
             }
         }
@@ -139,6 +176,28 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
 
         binding.btnFilter.setOnClickListener {
             navigateToFilter()
+        }
+
+        productsAdapter.addProductToCartClicked = { product ->
+            token?.let {
+                viewModel.doAction(ProductContract.Action.AddProductToCart(it, product.id!!))
+            }
+        }
+
+        productsAdapter.addProductToWishListClicked = { product ->
+            token?.let {
+                viewModel.doAction(ProductContract.Action.AddProductToWishlist(it, product.id!!))
+            }
+        }
+        productsAdapter.removeProductFromWishListClicked = { product ->
+            token?.let {
+                viewModel.doAction(
+                    ProductContract.Action.RemoveProductFromWishlist(
+                        it,
+                        product.id!!,
+                    ),
+                )
+            }
         }
     }
 
@@ -167,12 +226,11 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
 
     private fun navigateToProductDetails(product: Product) {
         val intent = Intent(context, ProductDetailsActivity::class.java)
-        intent.putExtra(PRODUCT, product)
+        intent.putExtra(PRODUCT, product.id)
         startActivity(intent)
     }
 
-    private fun showSuccessView(products: List<Product>?) {
-        productsAdapter.bindProducts(products)
+    private fun showSuccessView() {
         binding.successView.isVisible = true
         binding.errorView.isVisible = false
         binding.productsShimmerViewContainer.isVisible = false

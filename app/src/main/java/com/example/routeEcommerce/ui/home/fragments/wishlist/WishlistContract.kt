@@ -2,6 +2,7 @@ package com.example.routeEcommerce.ui.home.fragments.wishlist
 
 import androidx.lifecycle.LiveData
 import com.example.routeEcommerce.base.ViewMessage
+import com.route.domain.models.CartItem
 import com.route.domain.models.WishlistItem
 import kotlinx.coroutines.flow.StateFlow
 
@@ -16,11 +17,15 @@ class WishlistContract {
     sealed class Action {
         data class InitWishlist(val token: String) : Action()
 
+        data class AddProductToCart(val token: String, val productId: String) : Action()
+
         data class RemoveProduct(val token: String, val productId: String) : Action()
     }
 
     sealed class Event {
         data class ErrorMessage(val errorMessage: ViewMessage) : Event()
+
+        data class ProductAddedToCartSuccessfully(val cartItems: List<CartItem<String>?>?) : Event()
     }
 
     sealed class State {

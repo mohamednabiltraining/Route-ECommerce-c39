@@ -52,6 +52,16 @@ class MainActivity : AppCompatActivity() {
         startActivity(Intent(this, CartActivity::class.java))
     }
 
+    fun updateCartCount() {
+        val cartItemCount = UserDataUtils().getUserData(this, UserDataFiled.CART_ITEM_COUNT)
+        if (cartItemCount == "0" || cartItemCount == null) {
+            binding.content.header.counterView.isGone = true
+        } else {
+            binding.content.header.counterView.isVisible = true
+            binding.content.header.cartItemsCounter.text = cartItemCount
+        }
+    }
+
     private fun makeStatusBarTransparentAndIconsClear() {
         window.decorView.systemUiVisibility = (
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE

@@ -24,17 +24,24 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:showIn="@layout/activity_product_details">
 
-        <com.google.android.material.progressindicator.CircularProgressIndicator
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/loading_view"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:indeterminate="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            android:visibility="visible"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/product_details_viewpager_shimmerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:duration="800"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <include layout="@layout/item_product_details_placeholder" />
+            </com.facebook.shimmer.ShimmerFrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout
             android:id="@+id/error_view"
@@ -153,23 +160,23 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_medium"
-                    android:text="@string/egp_1_200"
                     android:textColor="@color/dark_blue"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="@id/product_name"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/product_name" />
+                    app:layout_constraintTop_toTopOf="@id/product_name"
+                    tools:text="@string/egp_1_200" />
 
                 <TextView
                     android:id="@+id/product_old_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/poppins_regular"
-                    android:text="@string/egp_1_500"
                     android:textColor="@color/pale_blue"
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="@id/product_price"
-                    app:layout_constraintTop_toBottomOf="@id/product_price" />
+                    app:layout_constraintTop_toBottomOf="@id/product_price"
+                    tools:text="@string/egp_1_500" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/section_quantity_relocate"
@@ -202,9 +209,9 @@
                             android:layout_height="wrap_content"
                             android:layout_marginHorizontal="22dp"
                             android:fontFamily="@font/poppins_medium"
+                            android:text="1"
                             android:textColor="@color/white"
-                            android:textSize="18sp"
-                            tools:text="1" />
+                            android:textSize="18sp" />
 
                         <ImageView
                             android:id="@+id/add_product"
@@ -423,8 +430,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="32dp"
                     android:layout_marginVertical="11dp"
-                    android:drawablePadding="24dp"
                     android:background="@drawable/rounded_blue_view"
+                    android:drawablePadding="24dp"
                     android:padding="6dp"
                     android:text="@string/add_to_cart"
                     android:textColor="@{isCart == false ? @color/white : @color/gray}"

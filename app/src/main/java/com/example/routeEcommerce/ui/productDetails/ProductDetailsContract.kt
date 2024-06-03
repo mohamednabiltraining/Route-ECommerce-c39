@@ -32,7 +32,8 @@ class ProductDetailsContract {
 
         data class WishlistState(val message: String, val isWishlist: Boolean) : Event()
 
-        data class AddedSuccessfully(
+        data class ProductAddedToCartSuccessfully(
+            val numberCartProduct: Int,
             val message: String,
             val isCart: Boolean,
         ) : Event()
@@ -43,7 +44,8 @@ class ProductDetailsContract {
 
         data object Loading : State()
 
-        data class Success(val product: Product?, val isWishlist: Boolean?) : State()
+        data class Success(val product: Product?, val isWishlist: Boolean?, val isCart: Boolean?) :
+            State()
 
         data class Error(val message: String) : State()
     }

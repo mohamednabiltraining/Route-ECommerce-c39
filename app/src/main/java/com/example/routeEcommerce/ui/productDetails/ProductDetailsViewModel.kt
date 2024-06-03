@@ -6,7 +6,9 @@ import com.example.routeEcommerce.base.BaseViewModel
 import com.example.routeEcommerce.model.ProductData
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
+import com.route.domain.usecase.cart.AddProductToCartUseCase
 import com.route.domain.usecase.cart.ChangeCartProductCountUseCase
+import com.route.domain.usecase.cart.GetLoggedUserCartUseCase
 import com.route.domain.usecase.product.GetProductDetailsUseCase
 import com.route.domain.usecase.wishlist.AddProductToWishlistUseCase
 import com.route.domain.usecase.wishlist.DeleteProductFromWishlistUseCase
@@ -24,10 +26,11 @@ class ProductDetailsViewModel
     constructor(
         private val addProductToWishlistUseCase: AddProductToWishlistUseCase,
         private val deleteProductFromWishlistUseCase: DeleteProductFromWishlistUseCase,
-        private val addProductToCartUseCase: AddProductToWishlistUseCase,
+        private val addProductToCartUseCase: AddProductToCartUseCase,
         private val changeProductQuantity: ChangeCartProductCountUseCase,
         private val getProductDetailsUseCase: GetProductDetailsUseCase,
         private val getLoggedUserWishlistUseCase: GetLoggedUserWishlistUseCase,
+        private val getLoggedUserCartUseCase: GetLoggedUserCartUseCase,
     ) : BaseViewModel(), ProductDetailsContract.ProductDetailsViewModel {
         private val _state =
             MutableStateFlow<ProductDetailsContract.State>(ProductDetailsContract.State.Idle)
@@ -131,9 +134,9 @@ class ProductDetailsViewModel
                                     when (changeProductCountResource) {
                                         is Resource.Success -> {
                                             _event.postValue(
-                                                ProductDetailsContract.Event.AddedSuccessfully(
-                                                    resource.data.message
-                                                        ?: "Product Added Successfully",
+                                                ProductDetailsContract.Event.ProductAddedToCartSuccessfully(
+                                                    resource.data?.products?.size ?: 0,
+                                                    "Product Added Successfully",
                                                     isCart = true,
                                                 ),
                                             )
@@ -167,20 +170,27 @@ class ProductDetailsViewModel
             productId: String,
         ) {
             viewModelScope.launch {
+                _state.emit(ProductDetailsContract.State.Loading)
                 combine(
                     getProductDetailsUseCase.invoke(productId),
                     getLoggedUserWishlistUseCase.invoke(token),
-                ) { productDetails, wishlist ->
+                    getLoggedUserCartUseCase(token),
+                ) { productDetails, wishlist, cartList ->
                     var productData: ProductData? = null
-                    if (productDetails is Resource.Success && wishlist is Resource.Success) {
+                    if (productDetails is Resource.Success && wishlist is Resource.Success && cartList is Resource.Success) {
                         val loggedWishlist =
                             wishlist.data?.map {
                                 it.id
+                            }
+                        val loggedCartList =
+                            cartList.data?.products?.map {
+                                it.product?.id
                             }
                         productData =
                             ProductData(
                                 productDetails.data,
                                 loggedWishlist?.contains(productId),
+                                loggedCartList?.contains(productId),
                             )
                     }
                     if (productDetails is Resource.Fail || productDetails is Resource.ServerFail) {
@@ -193,10 +203,21 @@ class ProductDetailsViewModel
                             wishlist,
                         )
                     }
+                    if (cartList is Resource.Fail || cartList is Resource.ServerFail) {
+                        extractViewMessage(
+                            cartList,
+                        )
+                    }
                     productData
                 }.collect {
                     it?.let {
-                        _state.emit(ProductDetailsContract.State.Success(it.product, it.wishList))
+                        _state.emit(
+                            ProductDetailsContract.State.Success(
+                                it.product,
+                                it.isWishlist,
+                                it.isCart,
+                            ),
+                        )
                     }
                 }
             }
