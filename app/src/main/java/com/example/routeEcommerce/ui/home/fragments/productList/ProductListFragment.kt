@@ -19,6 +19,7 @@ import com.example.routeEcommerce.ui.home.fragments.commenAdapters.ProductsAdapt
 import com.example.routeEcommerce.ui.productDetails.ProductDetailsActivity
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils
+import com.example.routeEcommerce.utils.showSnackBar
 import com.route.domain.contract.products.SortBy
 import com.route.domain.models.Brand
 import com.route.domain.models.Product
@@ -27,10 +28,6 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsListViewModel>() {
-    companion object {
-        const val SEARCH_KEY_WORD = "searchKeyWord"
-    }
-
     private val mViewModel: ProductsListViewModel by viewModels()
 
     override fun initViewModel(): ProductsListViewModel {
@@ -43,7 +40,6 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
 
     private val args: ProductListFragmentArgs by navArgs()
     private val productsAdapter by lazy { ProductsAdapter(requireContext()) }
-    lateinit var searchKeyWord: String
     private lateinit var brandsList: List<Brand>
 
     override fun onViewCreated(
@@ -51,8 +47,6 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
         savedInstanceState: Bundle?,
     ) {
         super.onViewCreated(view, savedInstanceState)
-//        searchKeyWord = arguments?.getString(SEARCH_KEY_WORD) as String
-//        SearchForProducts(searchKeyWord)
         initView()
         observeData()
         loadData()
@@ -85,6 +79,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
 
                 is ProductContract.Event.AddedSuccessfully -> {
                     productsAdapter.setWishlistData(event.wishlistItemsId)
+                    showSnackBar(event.message)
                 }
 
                 is ProductContract.Event.ProductAddedToCartSuccessfully -> {
@@ -103,6 +98,7 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
 
                 is ProductContract.Event.RemovedSuccessfully -> {
                     productsAdapter.setWishlistData(event.wishlistItemsId)
+                    showSnackBar(event.message)
                 }
             }
         }
@@ -142,7 +138,6 @@ class ProductListFragment : BaseFragment<FragmentProductListBinding, ProductsLis
 
     private fun initView() {
         val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
-
         binding.categoryProductsRv.adapter = productsAdapter
         productsAdapter.openProductDetails = {
             navigateToProductDetails(it)
