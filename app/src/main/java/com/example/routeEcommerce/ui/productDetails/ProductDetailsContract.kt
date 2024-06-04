@@ -14,7 +14,11 @@ class ProductDetailsContract {
     }
 
     sealed class Action {
-        data class LoadProductDetails(val token: String, val productId: String) : Action()
+        data class LoadProductDetails(
+            val token: String,
+            val productId: String,
+            val isHaveCart: Boolean,
+        ) : Action()
 
         data class AddProductToCart(
             val token: String,

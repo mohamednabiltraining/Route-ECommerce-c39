@@ -57,16 +57,69 @@ class ProductDetailsViewModel
                     )
 
                 is ProductDetailsContract.Action.LoadProductDetails ->
-                    loadProductDetails(
-                        action.token,
-                        action.productId,
-                    )
+                    when (action.isHaveCart) {
+                        true ->
+                            loadProductDetails(
+                                action.token,
+                                action.productId,
+                            )
+
+                        false -> loadProductDetailsWithoutCartList(action.token, action.productId)
+                    }
 
                 is ProductDetailsContract.Action.RemoveProductFromWishlist ->
                     removeProductFromWishlist(
                         action.token,
                         action.productId,
                     )
+            }
+        }
+
+        private fun loadProductDetailsWithoutCartList(
+            token: String,
+            productId: String,
+        ) {
+            viewModelScope.launch {
+                _state.emit(ProductDetailsContract.State.Loading)
+                combine(
+                    getProductDetailsUseCase.invoke(productId),
+                    getLoggedUserWishlistUseCase.invoke(token),
+                ) { productDetails, wishlist ->
+                    var productData: ProductData? = null
+                    if (productDetails is Resource.Success && wishlist is Resource.Success) {
+                        val loggedWishlist =
+                            wishlist.data?.map {
+                                it.id
+                            }
+                        productData =
+                            ProductData(
+                                productDetails.data,
+                                loggedWishlist?.contains(productId),
+                                false,
+                            )
+                    }
+                    if (productDetails is Resource.Fail || productDetails is Resource.ServerFail) {
+                        extractViewMessage(
+                            productDetails,
+                        )
+                    }
+                    if (wishlist is Resource.Fail || wishlist is Resource.ServerFail) {
+                        extractViewMessage(
+                            wishlist,
+                        )
+                    }
+                    productData
+                }.collect {
+                    it?.let {
+                        _state.emit(
+                            ProductDetailsContract.State.Success(
+                                it.product,
+                                it.isWishlist,
+                                it.isCart,
+                            ),
+                        )
+                    }
+                }
             }
         }
 

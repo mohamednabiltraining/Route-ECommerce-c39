@@ -60,6 +60,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
                 UserDataUtils().getUserData(
                     requireContext(),
                     UserDataFiled.CART_ITEM_COUNT,
+                ) != "null" || UserDataUtils().getUserData(
+                    requireContext(),
+                    UserDataFiled.CART_ITEM_COUNT,
                 ) != null
             viewModel.doAction(HomeContract.Action.InitPage(token, isHaveCart))
         } else {
