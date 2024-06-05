@@ -63,7 +63,6 @@ class ProfileViewModel
 
         private fun loadUserAddresses(token: String) {
             viewModelScope.launch {
-                _state.emit(ProfileContract.State.Loading)
                 getLoggedUserAddressesUseCase.invoke(token).collect { resource ->
                     when (resource) {
                         is Resource.Success -> {

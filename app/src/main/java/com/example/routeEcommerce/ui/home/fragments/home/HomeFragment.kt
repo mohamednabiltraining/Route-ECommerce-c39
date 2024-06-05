@@ -53,7 +53,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
         loadPage()
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e("TAG", "OnResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.e("TAG", "OnPause")
+    }
+
     private fun loadPage() {
+        Log.e("TAG", "onLoadPage")
         val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         if (token != null) {
             val isHaveCart =
@@ -64,7 +75,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, HomeFragmentViewModel>() 
                     requireContext(),
                     UserDataFiled.CART_ITEM_COUNT,
                 ) != null
-            viewModel.doAction(HomeContract.Action.InitPage(token, isHaveCart))
+            viewModel.doAction(HomeContract.Action.InitPage(token, true))
         } else {
             showDialog(
                 message = "Login Again",

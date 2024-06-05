@@ -201,12 +201,11 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         filteredList?.let {
             if (it.isEmpty()) {
                 binding.emptySearchResult.visibility = View.VISIBLE
-                showSuccessView()
             } else {
-                productsAdapter.bindProducts(it)
                 binding.emptySearchResult.visibility = View.GONE
-                showSuccessView()
             }
+            showSuccessView()
+            productsAdapter.bindProducts(it)
         }
     }
 }

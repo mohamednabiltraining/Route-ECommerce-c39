@@ -1,4 +1,4 @@
-package com.example.routeEcommerce.ui.cart.activity.adapter
+package com.example.routeEcommerce.ui.home.fragments.cart.adapter
 
 import android.content.Context
 import android.view.LayoutInflater

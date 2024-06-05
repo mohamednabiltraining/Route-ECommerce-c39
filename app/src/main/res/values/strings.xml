@@ -84,4 +84,10 @@
     <string name="check_out">Check Out</string>
     <string name="nothing_in_the_cart_yet">Nothing in the cart yet</string>
     <string name="no_result">No result</string>
+    <string name="online_payment">Online Payment</string>
+    <string name="coming_soon">Coming Soon…</string>
+    <string name="cash">Cash</string>
+    <string name="select_your_address">Select your Address…</string>
+    <string name="confirm_order">Confirm Order</string>
+    <string name="order_confirmed_successfully_please_check_your_email">Order confirmed successfully\nPlease check your email</string>
 </resources>

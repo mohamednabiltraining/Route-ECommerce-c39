@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -20,10 +21,11 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFragmentViewModel>() {
-    private val categoriesAdapter = CategoriesAdapter()
-    private val subcategoriesAdapter = SubcategoriesAdapter()
+    private val categoriesAdapter by lazy { CategoriesAdapter() }
+    private val subcategoriesAdapter by lazy { SubcategoriesAdapter() }
     private val args: CategoriesFragmentArgs by navArgs()
     private var subcategoriesList: List<Subcategory>? = null
+    private val currentPosition = MutableLiveData(0)
 
     private val mViewModel: CategoriesFragmentViewModel by viewModels()
 
@@ -67,7 +69,7 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
                                 categoriesAdapter.selectedPosition = startCategoryPosition
                                 showSuccessView(categoriesList, startCategoryPosition)
                             } else {
-                                showSuccessView(categoriesList, 0)
+                                showSuccessView(categoriesList, currentPosition.value!!)
                             }
                         }
 
@@ -126,10 +128,11 @@ class CategoriesFragment : BaseFragment<FragmentCategoriesBinding, CategoriesFra
 
     private fun initCategoriesAdapter() {
         binding.categoriesRv.adapter = categoriesAdapter
-        categoriesAdapter.categoryClicked = { _, category ->
+        categoriesAdapter.categoryClicked = { position, category ->
             initCategoryCard(category)
             // LoadSubCategories
             categoriesAdapter.selectItemOfCategory(category)
+            currentPosition.value = position
             viewModel.doAction(CategoryContract.Action.InitSubcategoryList(category.id ?: ""))
         }
     }

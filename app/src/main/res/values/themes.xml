@@ -36,4 +36,9 @@
         <item name="android:fontFamily">@font/poppins_medium</item>
         <item name="android:textSize">20sp</item>
     </style>
+
+    <style name="ShapeAppearanceOverlay.App.Card.Media" parent="">
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeTopRight">0dp</item>
+    </style>
 </resources>

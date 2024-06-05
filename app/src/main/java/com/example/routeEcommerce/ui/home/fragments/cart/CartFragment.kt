@@ -1,14 +1,15 @@
-package com.example.routeEcommerce.ui.cart.activity
+package com.example.routeEcommerce.ui.home.fragments.cart
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.routeEcommerce.R
+import com.example.routeEcommerce.base.BaseFragment
 import com.example.routeEcommerce.base.ViewMessage
-import com.example.routeEcommerce.databinding.ActivityCartBinding
-import com.example.routeEcommerce.ui.cart.activity.adapter.CartAdapter
+import com.example.routeEcommerce.databinding.FragmentCartBinding
+import com.example.routeEcommerce.ui.home.fragments.cart.adapter.CartAdapter
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils
 import com.route.domain.models.Cart
@@ -17,24 +18,29 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class CartActivity : AppCompatActivity() {
-    private val viewModel: CartContract.CartViewModel by viewModels<CartViewModel>()
-    private lateinit var binding: ActivityCartBinding
-    private val adapter by lazy { CartAdapter(this) }
+class CartFragment : BaseFragment<FragmentCartBinding, CartViewModel>() {
+    private val mViewModel: CartContract.CartViewModel by viewModels<CartViewModel>()
+    private val adapter by lazy { CartAdapter(requireContext()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = ActivityCartBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        setSupportActionBar(binding.cartToolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setDisplayShowHomeEnabled(true)
+    override fun initViewModel(): CartViewModel {
+        return mViewModel as CartViewModel
+    }
+
+    override fun getLayoutId(): Int {
+        return R.layout.fragment_cart
+    }
+
+    override fun onViewCreated(
+        view: View,
+        savedInstanceState: Bundle?,
+    ) {
+        super.onViewCreated(view, savedInstanceState)
         observeData()
         initViews()
     }
 
     private fun loadCart() {
-        val token = UserDataUtils().getUserData(this, UserDataFiled.TOKEN)
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         if (token != null) {
             viewModel.doAction(CartContract.Action.LoadCartProducts(token))
         } else {
@@ -64,51 +70,49 @@ class CartActivity : AppCompatActivity() {
     }
 
     private fun showError(errorMessage: ViewMessage) {
-        binding.content.errorMessage.visibility = View.VISIBLE
-        binding.content.errorMessage.text = errorMessage.message
-        binding.content.loadingView.visibility = View.GONE
+        binding.errorMessage.visibility = View.VISIBLE
+        binding.errorMessage.text = errorMessage.message
+        binding.loadingView.visibility = View.GONE
     }
 
     private fun showLoadingView() {
-        binding.content.loadingView.visibility = View.VISIBLE
+        binding.loadingView.visibility = View.VISIBLE
     }
 
     private fun showSussesView(cartProducts: Cart<Product>?) {
-        binding.content.loadingView.visibility = View.GONE
+        binding.loadingView.visibility = View.GONE
 
         UserDataUtils().saveUserInfo(
-            this,
+            requireContext(),
             UserDataFiled.CART_ITEM_COUNT,
             cartProducts?.products?.size.toString(),
         )
         if (cartProducts?.products?.isEmpty() == true || cartProducts == null) {
-            binding.content.emptyCartMessage.visibility = View.VISIBLE
-            binding.content.cartRv.visibility = View.GONE
+            binding.emptyCartMessage.visibility = View.VISIBLE
+            binding.cartRv.visibility = View.GONE
         } else {
-            binding.content.emptyCartMessage.visibility = View.GONE
-            binding.content.cartRv.visibility = View.VISIBLE
+            binding.emptyCartMessage.visibility = View.GONE
+            binding.cartRv.visibility = View.VISIBLE
             cartProducts.products?.let {
                 adapter.bindCartItemsList(it)
             }
-            binding.content.totalPrice.text =
+            binding.totalPrice.text =
                 this.getString(R.string.egp, "%,d".format(cartProducts.totalCartPrice))
         }
     }
 
-    override fun onSupportNavigateUp(): Boolean {
-        finish()
-        return super.onSupportNavigateUp()
-    }
-
     private fun initViews() {
-        binding.content.cartRv.adapter = adapter
+        binding.cartRv.adapter = adapter
         initAdapter()
 //        adapter.bindCartItemsList()
         loadCart()
+        binding.checkoutButton.setOnClickListener {
+            findNavController().navigate(R.id.action_cartFragment_to_checkOutFragment)
+        }
     }
 
     private fun initAdapter() {
-        val token = UserDataUtils().getUserData(this, UserDataFiled.TOKEN)
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         if (token != null) {
             adapter.changeProductQuantity = { productId, quantity ->
                 viewModel.doAction(

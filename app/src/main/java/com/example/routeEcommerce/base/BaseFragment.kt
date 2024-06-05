@@ -1,6 +1,7 @@
 package com.example.routeEcommerce.base
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ abstract class BaseFragment<VB : ViewBinding, VM : BaseViewModel> : Fragment() {
                 container,
                 false,
             )
+        Log.e("TAG", "OnCreate")
         return binding.root
     }
 
