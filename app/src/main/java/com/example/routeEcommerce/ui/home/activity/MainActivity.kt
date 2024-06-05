@@ -12,7 +12,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.example.routeEcommerce.R
 import com.example.routeEcommerce.databinding.ActivityMainBinding
-import com.example.routeEcommerce.ui.cart.CartActivity
+import com.example.routeEcommerce.ui.cart.activity.CartActivity
 import com.example.routeEcommerce.ui.search.activity.SearchActivity
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils

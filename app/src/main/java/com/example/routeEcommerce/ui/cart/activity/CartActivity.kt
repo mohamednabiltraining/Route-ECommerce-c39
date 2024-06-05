@@ -1,4 +1,4 @@
-package com.example.routeEcommerce.ui.cart
+package com.example.routeEcommerce.ui.cart.activity
 
 import android.os.Bundle
 import android.view.View
@@ -8,6 +8,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.ViewMessage
 import com.example.routeEcommerce.databinding.ActivityCartBinding
+import com.example.routeEcommerce.ui.cart.activity.adapter.CartAdapter
 import com.example.routeEcommerce.utils.UserDataFiled
 import com.example.routeEcommerce.utils.UserDataUtils
 import com.route.domain.models.Cart

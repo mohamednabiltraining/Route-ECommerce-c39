@@ -1,4 +1,4 @@
-package com.example.routeEcommerce.ui.cart
+package com.example.routeEcommerce.ui.cart.activity
 
 import android.util.Log
 import androidx.lifecycle.LiveData

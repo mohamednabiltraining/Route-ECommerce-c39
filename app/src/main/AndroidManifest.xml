@@ -40,7 +40,7 @@
             android:name=".ui.productDetails.display.DisplayProductImagesActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.cart.CartActivity"
+            android:name=".ui.cart.activity.CartActivity"
             android:exported="false" />
     </application>
 

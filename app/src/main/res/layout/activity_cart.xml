@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     app:elevation="0dp"
-    tools:context=".ui.cart.CartActivity">
+    tools:context=".ui.cart.activity.CartActivity">
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
