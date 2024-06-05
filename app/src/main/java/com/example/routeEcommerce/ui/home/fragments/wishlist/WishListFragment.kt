@@ -72,13 +72,16 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
                     )
                     (activity as MainActivity).updateCartCount()
                 }
+                is WishlistContract.Event.RemovedSuccessfully -> {
+                    loadWishlist()
+                    showSnackBar(event.message)
+                }
             }
         }
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
                     WishlistContract.State.Loading -> showLoading()
-                    is WishlistContract.State.RemovedSuccessfully -> showSnackBar(state.message)
                     is WishlistContract.State.Success -> initView(state.wishlist)
                 }
             }

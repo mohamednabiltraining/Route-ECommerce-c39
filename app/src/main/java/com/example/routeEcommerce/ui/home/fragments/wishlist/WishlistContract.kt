@@ -26,13 +26,13 @@ class WishlistContract {
         data class ErrorMessage(val errorMessage: ViewMessage) : Event()
 
         data class ProductAddedToCartSuccessfully(val cartItems: List<CartItem<String>?>?) : Event()
+
+        data class RemovedSuccessfully(val message: String) : Event()
     }
 
     sealed class State {
         data object Loading : State()
 
         data class Success(val wishlist: List<WishlistItem>) : State()
-
-        data class RemovedSuccessfully(val message: String) : State()
     }
 }

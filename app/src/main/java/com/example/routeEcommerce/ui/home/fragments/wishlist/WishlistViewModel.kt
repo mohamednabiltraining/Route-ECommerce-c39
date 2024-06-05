@@ -81,8 +81,8 @@ class WishlistViewModel
                 deleteProductFromWishlist.invoke(token, productId).collect { resource ->
                     when (resource) {
                         is Resource.Success -> {
-                            _state.emit(
-                                WishlistContract.State.RemovedSuccessfully(
+                            _event.postValue(
+                                WishlistContract.Event.RemovedSuccessfully(
                                     resource.data.message ?: "success",
                                 ),
                             )

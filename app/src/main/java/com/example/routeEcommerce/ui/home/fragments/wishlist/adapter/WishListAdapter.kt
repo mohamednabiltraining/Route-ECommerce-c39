@@ -67,8 +67,6 @@ class WishListAdapter(private val context: Context) :
         if (removeProductFromWishlist != null) {
             holder.viewBinding.removeProduct.setOnClickListener {
                 removeProductFromWishlist?.invoke(product.id!!)
-                items.removeAt(position)
-                notifyItemRemoved(position)
             }
         }
         if (addProductToCart != null) {
