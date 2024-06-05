@@ -52,7 +52,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
     private fun initView() {
         val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
-        binding.searchView.clearFocus()
         binding.categoryProductsRv.adapter = productsAdapter
         productsAdapter.openProductDetails = {
             navigateToProductDetails(it)
@@ -167,7 +166,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         binding.searchView.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
+                    showLoadingView()
                     filterList(query, productList)
+                    binding.searchView.clearFocus()
                     return true
                 }
 
@@ -182,14 +183,30 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         query: String?,
         productList: List<Product>?,
     ) {
-        val filteredList =
+        val filteredList: List<Product>? =
             productList?.filter { product ->
                 query?.let {
                     product.title?.lowercase()?.contains(query.lowercase())
-                } == true
+                } == true ||
+                    query?.let {
+                        product.description?.lowercase()?.contains(query.lowercase())
+                    } == true ||
+                    query?.let {
+                        product.category?.name?.lowercase()?.contains(query.lowercase())
+                    } == true ||
+                    query?.let {
+                        product.brand?.name?.lowercase()?.contains(query.lowercase())
+                    } == true
             }
-        if (filteredList != null) {
-            productsAdapter.bindProducts(filteredList)
+        filteredList?.let {
+            if (it.isEmpty()) {
+                binding.emptySearchResult.visibility = View.VISIBLE
+                showSuccessView()
+            } else {
+                productsAdapter.bindProducts(it)
+                binding.emptySearchResult.visibility = View.GONE
+                showSuccessView()
+            }
         }
     }
 }
