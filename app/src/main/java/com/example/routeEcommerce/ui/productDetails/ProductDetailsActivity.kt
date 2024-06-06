@@ -41,21 +41,12 @@ class ProductDetailsActivity : AppCompatActivity() {
 
     private fun loadProductDetails() {
         val token = UserDataUtils().getUserData(this, UserDataFiled.TOKEN)
-        val isHaveCart =
-            UserDataUtils().getUserData(
-                this,
-                UserDataFiled.CART_ITEM_COUNT,
-            ) != "null" || UserDataUtils().getUserData(
-                this,
-                UserDataFiled.CART_ITEM_COUNT,
-            ) != null
         if (token != null) {
             intent.extras?.let {
                 viewModel.doAction(
                     ProductDetailsContract.Action.LoadProductDetails(
                         token,
                         it.getString(PRODUCT) ?: "",
-                        isHaveCart,
                     ),
                 )
             }

@@ -57,15 +57,10 @@ class ProductDetailsViewModel
                     )
 
                 is ProductDetailsContract.Action.LoadProductDetails ->
-                    when (action.isHaveCart) {
-                        true ->
-                            loadProductDetails(
-                                action.token,
-                                action.productId,
-                            )
-
-                        false -> loadProductDetailsWithoutCartList(action.token, action.productId)
-                    }
+                    loadProductDetails(
+                        action.token,
+                        action.productId,
+                    )
 
                 is ProductDetailsContract.Action.RemoveProductFromWishlist ->
                     removeProductFromWishlist(
@@ -230,21 +225,34 @@ class ProductDetailsViewModel
                     getLoggedUserCartUseCase(token),
                 ) { productDetails, wishlist, cartList ->
                     var productData: ProductData? = null
-                    if (productDetails is Resource.Success && wishlist is Resource.Success && cartList is Resource.Success) {
-                        val loggedWishlist =
-                            wishlist.data?.map {
-                                it.id
-                            }
-                        val loggedCartList =
-                            cartList.data?.products?.map {
-                                it.product?.id
-                            }
-                        productData =
-                            ProductData(
-                                productDetails.data,
-                                loggedWishlist?.contains(productId),
-                                loggedCartList?.contains(productId),
-                            )
+                    if (productDetails is Resource.Success && wishlist is Resource.Success) {
+                        if (cartList is Resource.Success) {
+                            val loggedWishlist =
+                                wishlist.data?.map {
+                                    it.id
+                                }
+                            val loggedCartList =
+                                cartList.data?.products?.map {
+                                    it.product?.id
+                                }
+                            productData =
+                                ProductData(
+                                    productDetails.data,
+                                    loggedWishlist?.contains(productId),
+                                    loggedCartList?.contains(productId),
+                                )
+                        } else {
+                            val loggedWishlist =
+                                wishlist.data?.map {
+                                    it.id
+                                }
+                            productData =
+                                ProductData(
+                                    product = productDetails.data,
+                                    isWishlist = loggedWishlist?.contains(productId),
+                                    isCart = false,
+                                )
+                        }
                     }
                     if (productDetails is Resource.Fail || productDetails is Resource.ServerFail) {
                         extractViewMessage(
@@ -254,11 +262,6 @@ class ProductDetailsViewModel
                     if (wishlist is Resource.Fail || wishlist is Resource.ServerFail) {
                         extractViewMessage(
                             wishlist,
-                        )
-                    }
-                    if (cartList is Resource.Fail || cartList is Resource.ServerFail) {
-                        extractViewMessage(
-                            cartList,
                         )
                     }
                     productData

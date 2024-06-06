@@ -33,6 +33,6 @@ class WishlistContract {
     sealed class State {
         data object Loading : State()
 
-        data class Success(val wishlist: List<WishlistItem>) : State()
+        data class Success(val wishlist: List<WishlistItem>?, val cartList: List<String>?) : State()
     }
 }

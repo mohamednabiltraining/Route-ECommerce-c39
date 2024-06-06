@@ -104,4 +104,8 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     implementation(libs.androidx.security.crypto)
+
+    // leakCanary
+
+    // debugImplementation(libs.leakcanary.android)
 }

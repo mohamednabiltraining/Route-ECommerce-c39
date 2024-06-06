@@ -96,13 +96,29 @@ class ProductsListViewModel
                     getCartItems(token),
                 ) { categoryProducts, loggedWishlist, cartItems ->
                     var productListData: ProductListData? = null
-                    if (categoryProducts is Resource.Success && loggedWishlist is Resource.Success && cartItems is Resource.Success) {
+                    if (
+                        categoryProducts is Resource.Success &&
+                        loggedWishlist is Resource.Success
+                    ) {
                         productListData =
-                            ProductListData(
-                                productList = categoryProducts.data,
-                                wishlist = loggedWishlist.data,
-                                cartList = cartItems.data?.products,
-                            )
+                            if (cartItems is Resource.Success) {
+                                ProductListData(
+                                    productList = categoryProducts.data,
+                                    wishlist = loggedWishlist.data,
+                                    cartList = cartItems.data?.products,
+                                )
+                            } else {
+                                ProductListData(
+                                    productList = categoryProducts.data,
+                                    wishlist = loggedWishlist.data,
+                                    cartList = emptyList(),
+                                )
+                            }
+                    }
+                    if (categoryProducts is Resource.ServerFail || categoryProducts is Resource.Fail) {
+                        extractViewMessage(categoryProducts)?.let {
+                            _event.postValue(ProductContract.Event.ShowMessage(it))
+                        }
                     }
                     productListData
                 }.collect { productListData ->

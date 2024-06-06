@@ -46,11 +46,7 @@ class HomeFragmentViewModel
         override fun doAction(action: HomeContract.Action) {
             when (action) {
                 is HomeContract.Action.InitPage -> {
-                    when (action.isHaveCart) {
-                        true -> initCombineWithCart(action.token)
-
-                        false -> initCombineWithOutCart(action.token)
-                    }
+                    loadData(action.token)
                 }
 
                 is HomeContract.Action.AddProductToCart -> {
@@ -99,7 +95,7 @@ class HomeFragmentViewModel
             }
         }
 
-        private fun initCombineWithCart(token: String) {
+        private fun loadData(token: String) {
             viewModelScope.launch(Dispatchers.IO) {
                 combine(
                     getCategoriesUseCase(),
@@ -112,82 +108,26 @@ class HomeFragmentViewModel
                     if (categoriesList is Resource.Success &&
                         mostProductsList is Resource.Success &&
                         electronicProducts is Resource.Success &&
-                        wishlist is Resource.Success &&
-                        userCart is Resource.Success
-                    ) {
-                        data =
-                            HomeData(
-                                category = categoriesList.data,
-                                mostSellingProductList = mostProductsList.data,
-                                electronicsList = electronicProducts.data,
-                                wishListList = wishlist.data,
-                                userCartList = userCart.data?.products,
-                            )
-                    }
-                    if (categoriesList is Resource.Fail || categoriesList is Resource.ServerFail) {
-                        extractViewMessage(categoriesList)?.let {
-                            _event.postValue(HomeContract.Event.ShowMessage(it))
-                        }
-                    }
-                    if (mostProductsList is Resource.Fail || mostProductsList is Resource.ServerFail) {
-                        extractViewMessage(mostProductsList)?.let {
-                            _event.postValue(HomeContract.Event.ShowMessage(it))
-                        }
-                    }
-                    if (electronicProducts is Resource.Fail || electronicProducts is Resource.ServerFail) {
-                        extractViewMessage(electronicProducts)?.let {
-                            _event.postValue(HomeContract.Event.ShowMessage(it))
-                        }
-                    }
-                    if (wishlist is Resource.Fail || wishlist is Resource.ServerFail) {
-                        extractViewMessage(wishlist)?.let {
-                            _event.postValue(HomeContract.Event.ShowMessage(it))
-                        }
-                    }
-                    if (userCart is Resource.Fail || userCart is Resource.ServerFail) {
-                        extractViewMessage(userCart)?.let {
-                            _event.postValue(HomeContract.Event.ShowMessage(it))
-                        }
-                    }
-                    data
-                }.collect {
-                    it?.let { data ->
-                        _state.emit(
-                            HomeContract.State.Success(
-                                mostSellingProduct = data.mostSellingProductList,
-                                categories = data.category,
-                                electronicProducts = data.electronicsList,
-                                wishlist = data.wishListList,
-                                cartItems = data.userCartList,
-                            ),
-                        )
-                    }
-                }
-            }
-        }
-
-        private fun initCombineWithOutCart(token: String) {
-            viewModelScope.launch(Dispatchers.IO) {
-                combine(
-                    getCategoriesUseCase(),
-                    getMostSoldProductsUseCase(5),
-                    getElectronicProducts("6439d2d167d9aa4ca970649f"),
-                    getLoggedUserWishlistUseCase(token),
-                ) { categoriesList, mostProductsList, electronicProducts, wishlist ->
-                    var data: HomeData? = null
-                    if (categoriesList is Resource.Success &&
-                        mostProductsList is Resource.Success &&
-                        electronicProducts is Resource.Success &&
                         wishlist is Resource.Success
                     ) {
                         data =
-                            HomeData(
-                                category = categoriesList.data,
-                                mostSellingProductList = mostProductsList.data,
-                                electronicsList = electronicProducts.data,
-                                wishListList = wishlist.data,
-                                userCartList = emptyList(),
-                            )
+                            if (userCart is Resource.Success) {
+                                HomeData(
+                                    category = categoriesList.data,
+                                    mostSellingProductList = mostProductsList.data,
+                                    electronicsList = electronicProducts.data,
+                                    wishListList = wishlist.data,
+                                    userCartList = userCart.data?.products,
+                                )
+                            } else {
+                                HomeData(
+                                    category = categoriesList.data,
+                                    mostSellingProductList = mostProductsList.data,
+                                    electronicsList = electronicProducts.data,
+                                    wishListList = wishlist.data,
+                                    userCartList = emptyList(),
+                                )
+                            }
                     }
                     if (categoriesList is Resource.Fail || categoriesList is Resource.ServerFail) {
                         extractViewMessage(categoriesList)?.let {

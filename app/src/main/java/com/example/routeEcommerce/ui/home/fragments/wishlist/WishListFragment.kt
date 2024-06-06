@@ -65,6 +65,11 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
             when (event) {
                 is WishlistContract.Event.ErrorMessage -> showError(event.errorMessage.message)
                 is WishlistContract.Event.ProductAddedToCartSuccessfully -> {
+                    event.cartItems?.map {
+                        it?.product
+                    }?.let {
+                        adapter.setCartItemsData(it)
+                    }
                     UserDataUtils().saveUserInfo(
                         requireContext(),
                         UserDataFiled.CART_ITEM_COUNT,
@@ -72,6 +77,7 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
                     )
                     (activity as MainActivity).updateCartCount()
                 }
+
                 is WishlistContract.Event.RemovedSuccessfully -> {
                     loadWishlist()
                     showSnackBar(event.message)
@@ -82,33 +88,38 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
             viewModel.state.collect { state ->
                 when (state) {
                     WishlistContract.State.Loading -> showLoading()
-                    is WishlistContract.State.Success -> initView(state.wishlist)
+                    is WishlistContract.State.Success -> initView(state.wishlist, state.cartList)
                 }
             }
         }
     }
 
-    private fun initView(wishlist: List<WishlistItem>) {
+    private fun initView(
+        wishlist: List<WishlistItem>?,
+        cartList: List<String>?,
+    ) {
         val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         binding.errorView.isVisible = false
         binding.successView.isVisible = true
         binding.loadingView.isVisible = false
-        if (wishlist.isEmpty()) {
-            binding.emptyWishlist.isVisible = true
-            binding.recyclerView.isVisible = false
-        } else {
-            binding.emptyWishlist.isGone = true
-            binding.recyclerView.isVisible = true
-            binding.recyclerView.adapter = adapter
-            adapter.bindItems(wishlist)
-            adapter.addProductToCart = { productId ->
-                token?.let {
-                    viewModel.doAction(WishlistContract.Action.AddProductToCart(it, productId))
+        if (wishlist != null) {
+            if (wishlist.isEmpty()) {
+                binding.emptyWishlist.isVisible = true
+                binding.recyclerView.isVisible = false
+            } else {
+                binding.emptyWishlist.isGone = true
+                binding.recyclerView.isVisible = true
+                binding.recyclerView.adapter = adapter
+                adapter.bindItems(wishlist)
+                adapter.addProductToCart = { productId ->
+                    token?.let {
+                        viewModel.doAction(WishlistContract.Action.AddProductToCart(it, productId))
+                    }
                 }
-            }
-            adapter.removeProductFromWishlist = { productId ->
-                token?.let {
-                    viewModel.doAction(WishlistContract.Action.RemoveProduct(it, productId))
+                adapter.removeProductFromWishlist = { productId ->
+                    token?.let {
+                        viewModel.doAction(WishlistContract.Action.RemoveProduct(it, productId))
+                    }
                 }
             }
         }

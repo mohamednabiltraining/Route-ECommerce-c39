@@ -16,10 +16,15 @@ import com.route.domain.models.WishlistItem
 class WishListAdapter(private val context: Context) :
     RecyclerView.Adapter<WishListAdapter.ViewHolder>() {
     private var items: MutableList<WishlistItem?> = mutableListOf()
+    private var cartItems: List<String?> = emptyList()
 
     class ViewHolder(private val context: Context, val viewBinding: ItemWishlistBinding) :
         RecyclerView.ViewHolder(viewBinding.root) {
-        fun bind(item: WishlistItem) {
+        fun bind(
+            item: WishlistItem,
+            cartItems: List<String?>,
+        ) {
+            viewBinding.isCart = cartItems.contains(item.id)
             if (item.title?.length!! >= 24) {
                 val newTitle = item.title
                 viewBinding.itemTitle.text =
@@ -63,7 +68,7 @@ class WishListAdapter(private val context: Context) :
         position: Int,
     ) {
         val product = items[position]!!
-        holder.bind(product)
+        holder.bind(product, cartItems)
         if (removeProductFromWishlist != null) {
             holder.viewBinding.removeProduct.setOnClickListener {
                 removeProductFromWishlist?.invoke(product.id!!)
@@ -92,6 +97,11 @@ class WishListAdapter(private val context: Context) :
         val diffResults = DiffUtil.calculateDiff(diffUtil)
         items = addedItems.toMutableList()
         diffResults.dispatchUpdatesTo(this)
+    }
+
+    fun setCartItemsData(newCartListIds: List<String?>) {
+        this.cartItems = newCartListIds
+        notifyDataSetChanged()
     }
 
     var removeProductFromWishlist: ((productId: String) -> Unit)? = null
