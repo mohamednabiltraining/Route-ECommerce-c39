@@ -6,6 +6,7 @@ import com.example.routeEcommerce.base.BaseViewModel
 import com.example.routeEcommerce.utils.SingleLiveEvent
 import com.route.domain.common.Resource
 import com.route.domain.usecase.address.GetLoggedUserAddressesUseCase
+import com.route.domain.usecase.cart.DeleteUserCartUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,6 +18,7 @@ class CheckOutViewModel
     @Inject
     constructor(
         private val getLoggedUserAddressesUseCase: GetLoggedUserAddressesUseCase,
+        private val deleteUserCartUseCase: DeleteUserCartUseCase,
     ) : BaseViewModel(), CheckOutContract.CheckOutViewModel {
         private val _state = MutableStateFlow<CheckOutContract.State>(CheckOutContract.State.Loading)
         override val state: StateFlow<CheckOutContract.State>
@@ -29,6 +31,21 @@ class CheckOutViewModel
         override fun doAction(action: CheckOutContract.Action) {
             when (action) {
                 is CheckOutContract.Action.LoadUserAddresses -> loadUserAddresses(action.token)
+                is CheckOutContract.Action.DeleteUserCart -> deleteCart(action.token)
+            }
+        }
+
+        private fun deleteCart(token: String) {
+            viewModelScope.launch {
+                deleteUserCartUseCase(token).collect { resource ->
+                    when (resource) {
+                        is Resource.Success -> _event.postValue(CheckOutContract.Event.CartDeleted)
+
+                        else -> {
+                            extractViewMessage(resource)
+                        }
+                    }
+                }
             }
         }
 

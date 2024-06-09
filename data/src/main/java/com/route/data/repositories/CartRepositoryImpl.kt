@@ -44,4 +44,8 @@ class CartRepositoryImpl
         ): Flow<Resource<Cart<Product>?>> {
             return toFlow { cartOnlineDataSource.removeSpecificCartItem(token, cartProductId) }
         }
+
+        override suspend fun deleteUserCart(token: String): Flow<Resource<String?>> {
+            return toFlow { cartOnlineDataSource.deleteUserCart(token) }
+        }
     }

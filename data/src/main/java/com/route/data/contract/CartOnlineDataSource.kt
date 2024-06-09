@@ -21,4 +21,6 @@ interface CartOnlineDataSource {
         token: String,
         cartProductId: String,
     ): Cart<Product>?
+
+    suspend fun deleteUserCart(token: String): String?
 }

@@ -38,4 +38,9 @@ interface CartWebServices {
         @Header("token") token: String,
         @Path("cartProductId") cartProductId: String,
     ): Response<CartForProductDto>
+
+    @DELETE("/api/v1/cart")
+    suspend fun deleteUserCart(
+        @Header("token") token: String,
+    ): Response<Nothing>
 }

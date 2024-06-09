@@ -77,4 +77,25 @@ class AuthOnlineDataSourceImpl
             val authResponse = AuthResponse(response.user?.toUser(), response.token)
             return authResponse
         }
+
+        override suspend fun forgetPassword(email: String): String? {
+            val response = executeAuth { webServices.forgetPassword(email) }
+
+            return response.message
+        }
+
+        override suspend fun verifyResetCode(resetCode: String): String? {
+            val response = executeAuth { webServices.verifyResetCode(resetCode) }
+
+            return response.statusMsg
+        }
+
+        override suspend fun resetPassword(
+            email: String,
+            newPassword: String,
+        ): String? {
+            val response = executeAuth { webServices.resetPassword(email, newPassword) }
+
+            return response.token
+        }
     }

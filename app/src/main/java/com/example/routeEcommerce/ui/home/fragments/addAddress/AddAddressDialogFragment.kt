@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 class AddAddressDialogFragment : BottomSheetDialogFragment() {
     private val viewModel: AddAddressContract.ViewModel by viewModels<AddAddressViewModel>()
     private var _binding: FragmentAddAddressDialogBinding? = null
-    val binding get() = _binding!!
+    private val binding get() = _binding!!
 
     override fun onResume() {
         super.onResume()

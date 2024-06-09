@@ -90,4 +90,16 @@
     <string name="select_your_address">Select your Address…</string>
     <string name="confirm_order">Confirm Order</string>
     <string name="order_confirmed_successfully_please_check_your_email">Order confirmed successfully\nPlease check your email</string>
+    <string name="send_code">Send code</string>
+    <string name="enter_the_reset_code">Enter the reset code</string>
+    <string name="resend_the_code">Resend the code…</string>
+    <string name="resend">Resend.</string>
+    <string name="verify">Verify</string>
+    <string name="failed_to_send_the_code_please_try_again_later">Failed to send the code\nPlease try again later</string>
+    <string name="email_sent_successfully">Email sent successfully</string>
+    <string name="set_your_new_password">Set your new password</string>
+    <string name="something_went_wrong_please_try_again_later_if_this_keep_happening_call_the_support_team">Something went wrong\nPlease try again later\n If this keep happening call the support team.</string>
+    <string name="go_back">Go back</string>
+    <string name="password_changed_successfully">Password changed successfully</string>
+    <string name="back_to_login">Back to login</string>
 </resources>

@@ -1,5 +1,6 @@
 [versions]
 agp = "8.3.0"
+bluecrunchverification = "1.0.5"
 datastorePreferences = "1.1.1"
 dotsindicator = "5.0"
 firebaseBom = "33.0.0"
@@ -49,6 +50,7 @@ androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "mult
 androidx-navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationFragment" }
 androidx-security-crypto = { module = "androidx.security:security-crypto", version.ref = "securityCrypto" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+bluecrunchverification = { module = "com.bluecrunch:bluecrunchverification", version.ref = "bluecrunchverification" }
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "retrofitVersion" }
 dotsindicator = { module = "com.tbuonomo:dotsindicator", version.ref = "dotsindicator" }
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }

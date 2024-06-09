@@ -76,7 +76,6 @@ class FiltrationFragment : Fragment() {
                 sortBy = filterSortBy,
             )
         findNavController().navigate(action)
-        findNavController().popBackStack()
     }
 
     private fun subcategorySection() {

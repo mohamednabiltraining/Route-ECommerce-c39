@@ -30,4 +30,13 @@ interface AuthenticationRepository {
         newPassword: String,
         confirmPassword: String,
     ): Flow<Resource<AuthResponse?>>
+
+    suspend fun forgetPassword(email: String): Flow<Resource<String?>>
+
+    suspend fun verifyResetCode(resetCode: String): Flow<Resource<String?>>
+
+    suspend fun resetPassword(
+        email: String,
+        newPassword: String,
+    ): Flow<Resource<String?>>
 }

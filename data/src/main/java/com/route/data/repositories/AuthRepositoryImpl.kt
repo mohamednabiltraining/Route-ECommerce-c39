@@ -59,4 +59,19 @@ class AuthRepositoryImpl
                 )
             }
         }
+
+        override suspend fun forgetPassword(email: String): Flow<Resource<String?>> {
+            return toFlow { authOnlineDataSource.forgetPassword(email) }
+        }
+
+        override suspend fun verifyResetCode(resetCode: String): Flow<Resource<String?>> {
+            return toFlow { authOnlineDataSource.verifyResetCode(resetCode) }
+        }
+
+        override suspend fun resetPassword(
+            email: String,
+            newPassword: String,
+        ): Flow<Resource<String?>> {
+            return toFlow { authOnlineDataSource.resetPassword(email, newPassword) }
+        }
     }

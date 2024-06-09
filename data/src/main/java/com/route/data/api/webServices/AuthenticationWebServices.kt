@@ -26,7 +26,7 @@ interface AuthenticationWebServices {
     ): AuthResponse
 
     @FormUrlEncoded
-    @PUT("api/v1/users/updateMe")
+    @PUT("/api/v1/users/updateMe")
     suspend fun updateAccountName(
         @Header("token") token: String,
         @Field("name") newName: String,
@@ -39,5 +39,24 @@ interface AuthenticationWebServices {
         @Field("currentPassword") currentPassword: String,
         @Field("password") password: String,
         @Field("rePassword") rePassword: String,
+    ): AuthResponse
+
+    @FormUrlEncoded
+    @POST("/api/v1/auth/forgotPasswords")
+    suspend fun forgetPassword(
+        @Field("email") email: String,
+    ): AuthResponse
+
+    @FormUrlEncoded
+    @POST("/api/v1/auth/verifyResetCode")
+    suspend fun verifyResetCode(
+        @Field("resetCode") resetCode: String,
+    ): AuthResponse
+
+    @FormUrlEncoded
+    @PUT("/api/v1/auth/resetPassword")
+    suspend fun resetPassword(
+        @Field("email") email: String,
+        @Field("newPassword") newPassword: String,
     ): AuthResponse
 }

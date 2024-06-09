@@ -28,4 +28,13 @@ interface AuthOnlineDataSource {
         newPassword: String,
         confirmPassword: String,
     ): AuthResponse?
+
+    suspend fun forgetPassword(email: String): String?
+
+    suspend fun verifyResetCode(resetCode: String): String?
+
+    suspend fun resetPassword(
+        email: String,
+        newPassword: String,
+    ): String?
 }

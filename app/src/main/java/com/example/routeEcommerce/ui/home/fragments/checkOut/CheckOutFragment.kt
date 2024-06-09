@@ -9,6 +9,7 @@ import com.example.routeEcommerce.R
 import com.example.routeEcommerce.base.BaseFragment
 import com.example.routeEcommerce.base.showDialog
 import com.example.routeEcommerce.databinding.FragmentCheckOutBinding
+import com.example.routeEcommerce.ui.home.activity.MainActivity
 import com.example.routeEcommerce.ui.home.fragments.checkOut.adapter.AddressViewPagerAdapter
 import com.example.routeEcommerce.ui.userAuthentication.activity.UserAuthenticationActivity
 import com.example.routeEcommerce.utils.UserDataFiled
@@ -41,6 +42,11 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding, CheckOutViewModel
     }
 
     private fun observeData() {
+        viewModel.event.observe(viewLifecycleOwner) { event ->
+            when (event) {
+                CheckOutContract.Event.CartDeleted -> showSuccessView()
+            }
+        }
         lifecycleScope.launch {
             viewModel.state.collect { state ->
                 when (state) {
@@ -53,6 +59,13 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding, CheckOutViewModel
                 }
             }
         }
+    }
+
+    private fun showSuccessView() {
+        UserDataUtils().saveUserInfo(requireContext(), UserDataFiled.CART_ITEM_COUNT, null)
+        binding.selectPaymentView.visibility = View.GONE
+        binding.orderConfirmed.visibility = View.VISIBLE
+        (activity as MainActivity).updateCartCount()
     }
 
     private fun loadUserAddresses() {
@@ -79,14 +92,16 @@ class CheckOutFragment : BaseFragment<FragmentCheckOutBinding, CheckOutViewModel
     }
 
     private fun initView() {
+        val token = UserDataUtils().getUserData(requireContext(), UserDataFiled.TOKEN)
         binding.paymentSection.visibility = View.VISIBLE
         binding.orderConfirmed.visibility = View.GONE
         binding.loadingIndicator.visibility = View.GONE
         binding.addressesRv.adapter = addressesAdapter
 
-        binding.confirmButton.setOnClickListener {
-            binding.selectPaymentView.visibility = View.GONE
-            binding.orderConfirmed.visibility = View.VISIBLE
+        binding.confirmButton.setOnClickListener { _ ->
+            token?.let {
+                viewModel.doAction(CheckOutContract.Action.DeleteUserCart(it))
+            }
         }
     }
 }

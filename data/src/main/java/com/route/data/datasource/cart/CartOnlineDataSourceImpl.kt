@@ -45,4 +45,10 @@ class CartOnlineDataSourceImpl
                 }
             return response.data?.toCart()
         }
+
+        override suspend fun deleteUserCart(token: String): String? {
+            val response = executeApi { webServices.deleteUserCart(token) }
+
+            return response.message
+        }
     }

@@ -15,9 +15,13 @@ class CheckOutContract {
 
     sealed class Action {
         data class LoadUserAddresses(val token: String) : Action()
+
+        data class DeleteUserCart(val token: String) : Action()
     }
 
-    sealed class Event
+    sealed class Event {
+        data object CartDeleted : Event()
+    }
 
     sealed class State {
         data object Loading : State()

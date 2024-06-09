@@ -23,4 +23,6 @@ interface CartRepository {
         token: String,
         cartProductId: String,
     ): Flow<Resource<Cart<Product>?>>
+
+    suspend fun deleteUserCart(token: String): Flow<Resource<String?>>
 }

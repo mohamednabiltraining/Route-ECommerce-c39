@@ -49,7 +49,7 @@ class LoginViewModel
             viewModelScope.launch(Dispatchers.IO) {
                 _state.emit(LoginContract.State.Logging)
                 Log.e("Loading->", "isLoading")
-                delay(3000)
+                delay(1000)
                 loginUseCase.invoke(
                     emailLiveData.value!!,
                     passwordLiveData.value!!,

@@ -55,7 +55,7 @@ class RegisterViewModel
             if (!isValidInputs()) return
             viewModelScope.launch(Dispatchers.IO) {
                 _state.emit(RegisterContract.State.Registering)
-                delay(3000)
+                delay(1000)
                 registerUseCase.invoke(
                     usernameLiveData.value!!,
                     emailLiveData.value!!,
