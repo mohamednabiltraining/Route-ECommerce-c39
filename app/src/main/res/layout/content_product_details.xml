@@ -165,7 +165,7 @@
                     app:layout_constraintBottom_toBottomOf="@id/product_name"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/product_name"
-                    tools:text="@string/egp_1_200" />
+                    tools:text="EGP 1,200" />
 
                 <TextView
                     android:id="@+id/product_old_price"
@@ -176,7 +176,7 @@
                     android:textSize="13sp"
                     app:layout_constraintEnd_toEndOf="@id/product_price"
                     app:layout_constraintTop_toBottomOf="@id/product_price"
-                    tools:text="@string/egp_1_500" />
+                    tools:text="EGP 1,500" />
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/section_quantity_relocate"

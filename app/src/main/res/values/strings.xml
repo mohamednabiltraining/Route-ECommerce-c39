@@ -5,22 +5,13 @@
     <string name="wishlist">Wishlist</string>
     <string name="profile">Profile</string>
     <string name="what_do_you_search_for">what do you search for?</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="your_full_name">Your full name</string>
     <string name="your_email">Your Email</string>
     <string name="your_password">Your Password</string>
     <string name="password">Password</string>
     <string name="your_mobile_number">Your Mobile Number</string>
     <string name="your_address">Your Addresses</string>
-    <string name="phone_num">01159732150</string>
-    <string name="masr_el_gdeda_street_9">Masr EL Gdeda,street 9,</string>
-    <string name="_01159732150">01159732150</string>
-    <string name="nike_air_jordon">Nike Air Jordon</string>
-    <string name="black_color">Black color</string>
     <string name="add_to_cart">Add to cart</string>
-    <string name="egp_1_500">EGP 1,500</string>
-    <string name="egp_1_200">EGP 1,200</string>
     <string name="total_price">Total price</string>
     <string name="cart">Cart</string>
     <string name="something_went_wrong">Something Went Wrong,\nPlease check your internet connection.</string>
@@ -46,7 +37,7 @@
     <string name="sign_in_with_your_mail">Please sign in with your mail</string>
     <string name="sign_in">Sign in</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="no_product_found_message">No products founded in this category</string>
+    <string name="no_product_found_message">No products found in this category</string>
     <string name="add_to_wishlist">Add to wishlist</string>
     <string name="product_details">Product Details</string>
     <string name="sold">Sold</string>
@@ -98,7 +89,7 @@
     <string name="failed_to_send_the_code_please_try_again_later">Failed to send the code\nPlease try again later</string>
     <string name="email_sent_successfully">Email sent successfully</string>
     <string name="set_your_new_password">Set your new password</string>
-    <string name="something_went_wrong_please_try_again_later_if_this_keep_happening_call_the_support_team">Something went wrong\nPlease try again later\n If this keep happening call the support team.</string>
+    <string name="something_went_wrong_please_try_again_later_if_this_keep_happening_call_the_support_team">Something went wrong Please try again later  If this keep happening call the support team.</string>
     <string name="go_back">Go back</string>
     <string name="password_changed_successfully">Password changed successfully</string>
     <string name="back_to_login">Back to login</string>
