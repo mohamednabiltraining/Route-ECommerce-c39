@@ -152,7 +152,7 @@ class FiltrationFragment : Fragment() {
 
     private fun initSubcategoryAdapter() {
         val subcategoriesAdapter =
-            FiltersAdapter(requireContext(), args.subcategories.toList()) {
+            FiltersAdapter(args.subcategories.toList()) {
                 return@FiltersAdapter it.name ?: ""
             }
         binding.subcategoriesRv.adapter = subcategoriesAdapter
@@ -163,7 +163,7 @@ class FiltrationFragment : Fragment() {
 
     private fun initBrandsAdapter() {
         val brandsAdapter =
-            FiltersAdapter(requireContext(), args.brands.toList()) {
+            FiltersAdapter(args.brands.toList()) {
                 return@FiltersAdapter it.name ?: ""
             }
         binding.brandsRv.adapter = brandsAdapter

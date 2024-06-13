@@ -1,15 +1,12 @@
 package com.example.routeEcommerce.ui.home.fragments.filter.adapter
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.routeEcommerce.R
 import com.example.routeEcommerce.databinding.ItemFilterBinding
 
 class FiltersAdapter<T>(
-    private val context: Context,
     private var filtersList: List<T>? = null,
     private val getNames: (T) -> String,
 ) : RecyclerView.Adapter<FiltersAdapter.FilterViewHolder>() {
@@ -25,22 +22,12 @@ class FiltersAdapter<T>(
         val binding: ItemFilterBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(
-            context: Context,
             filterName: String,
             isClicked: Boolean,
         ) {
             binding.btnFilterItem.text = filterName
             binding.executePendingBindings()
-            when (isClicked) {
-                true -> {
-                    binding.btnFilterItem.setTextColor(context.getColor(R.color.white))
-                    binding.btnFilterItem.setBackgroundColor(context.getColor(R.color.blue))
-                }
-
-                false -> {
-                    binding.btnFilterItem.setTextColor(context.getColor(R.color.gray))
-                }
-            }
+            binding.isClicked = isClicked
         }
     }
 
@@ -67,7 +54,7 @@ class FiltersAdapter<T>(
     ) {
         val filterItem = filtersList?.get(position)
         if (filterItem != null) {
-            holder.bind(context, namesList[position], clickedItemPosition == position)
+            holder.bind(namesList[position], clickedItemPosition == position)
             choseFilter?.let {
                 holder.binding.btnFilterItem.setOnClickListener {
                     clickedItemPosition?.let { itemPosition -> notifyItemChanged(itemPosition) }

@@ -25,6 +25,7 @@ class WishListAdapter(private val context: Context) :
             cartItems: List<String?>,
         ) {
             viewBinding.isCart = cartItems.contains(item.id)
+            viewBinding.executePendingBindings()
             if (item.title?.length!! >= 24) {
                 val newTitle = item.title
                 viewBinding.itemTitle.text =

@@ -10,6 +10,7 @@ import com.route.domain.models.Address
 import com.route.domain.usecase.address.AddNewAddressUseCase
 import com.route.domain.usecase.auth.ValidationUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -49,7 +50,8 @@ class AddAddressViewModel
             if (!isValidInput()) return
             viewModelScope.launch {
                 _state.emit(AddAddressContract.State.Loading)
-                addNewAddressUseCase.invoke(
+                delay(1000)
+                addNewAddressUseCase(
                     token,
                     Address(
                         name = addressLiveData.value?.trim()!!,

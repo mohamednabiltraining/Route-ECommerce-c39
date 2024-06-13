@@ -102,6 +102,9 @@ class WishListFragment : BaseFragment<FragmentWishlistBinding, WishlistViewModel
         binding.errorView.isVisible = false
         binding.successView.isVisible = true
         binding.loadingView.isVisible = false
+        cartList?.let {
+            adapter.setCartItemsData(it)
+        }
         if (wishlist != null) {
             if (wishlist.isEmpty()) {
                 binding.emptyWishlist.isVisible = true
