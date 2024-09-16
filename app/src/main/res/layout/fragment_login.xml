@@ -4,6 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <variable
+            name="vm"
+            type="com.example.routeEcommerce.ui.userAuthentication.fragments.login.LoginViewModel" />
     </data>
 
     <ScrollView
@@ -28,6 +32,7 @@
                     android:layout_width="350dp"
                     android:layout_height="140dp"
                     android:layout_marginVertical="30dp"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/logo_white" />
 
                 <TextView
@@ -48,57 +53,66 @@
                     android:textColor="@color/white"
                     android:textSize="12sp" />
 
-                <TextView
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/email_address"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/email_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="15dp"
+                    android:layout_marginBottom="24dp"
                     android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/enter_your_email"
-                    android:inputType="textEmailAddress"
+                    android:hint="@string/email_address"
                     android:maxLength="40"
                     android:maxLines="1"
                     android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
+                    android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    app:boxStrokeColor="@color/selector_outlined_auth"
+                    app:errorEnabled="@{vm.emailError == null ? false : true}"
+                    app:errorMessage="@{vm.emailError}"
+                    app:startIconDrawable="@drawable/ic_email">
 
-                <TextView
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/email_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/enter_your_email"
+                        android:fontFamily="@font/poppins_regular"
+                        android:inputType="textEmailAddress"
+                        android:text="@={vm.emailLiveData}"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/password_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="@font/poppins_medium"
-                    android:text="@string/password"
-                    android:textColor="@color/white"
-                    android:textSize="14sp" />
-
-                <EditText
-                    android:id="@+id/password_edt"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="16dp"
                     android:background="@drawable/edit_text_rounded"
-                    android:fontFamily="@font/poppins_regular"
-                    android:hint="@string/enter_your_password"
-                    android:inputType="textPassword"
+                    android:hint="@string/password"
                     android:maxLength="40"
                     android:maxLines="1"
                     android:minLines="1"
-                    android:padding="18dp"
-                    android:textColor="@color/black"
+                    android:padding="8dp"
                     android:textColorHint="@color/gray_110"
-                    android:textSize="14sp" />
+                    app:boxStrokeColor="@color/selector_outlined_auth"
+                    app:endIconMode="password_toggle"
+                    app:errorEnabled="@{vm.passwordError == null ? false : true}"
+                    app:errorMessage="@{vm.passwordError}"
+                    app:startIconDrawable="@drawable/ic_lock">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/password_edt"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autofillHints="@string/enter_your_password"
+                        android:fontFamily="@font/poppins_regular"
+                        android:inputType="textPassword"
+                        android:text="@={vm.passwordLiveData}"
+                        android:textColor="@color/black"
+                        android:textSize="14sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
                     android:id="@+id/forgot_password"
@@ -139,6 +153,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_marginEnd="30dp"
+                        android:importantForAccessibility="no"
                         android:src="@drawable/ic_next"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

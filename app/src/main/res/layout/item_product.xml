@@ -7,8 +7,15 @@
 
         <variable
             name="product"
-            type="com.example.routee_commerce.model.Product" />
+            type="com.route.domain.models.Product" />
 
+        <variable
+            name="isWishlist"
+            type="Boolean" />
+
+        <variable
+            name="isItemCart"
+            type="Boolean" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
@@ -43,11 +50,12 @@
                 android:lines="1"
                 android:maxLines="1"
                 android:text="@{product.title}"
-                android:textColor="@color/Darkblue"
+                android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/product_img" />
+                app:layout_constraintTop_toBottomOf="@id/product_img"
+                tools:text="asdasdasdad sasadasddad" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/add_to_wishlist_btn"
@@ -70,7 +78,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="2dp"
-                    android:src="@drawable/add_to_wishlist_selector" />
+                    android:src="@{isWishlist == false ? @drawable/ic_add : @drawable/ic_like}" />
             </androidx.cardview.widget.CardView>
 
             <TextView
@@ -79,8 +87,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="@string/egp_1_200"
-                android:textColor="@color/Darkblue"
+                tools:text="EGP1,200"
+                android:textColor="@color/dark_blue"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@id/product_name"
                 app:layout_constraintTop_toBottomOf="@id/product_name" />
@@ -91,7 +99,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:fontFamily="@font/poppins_regular"
-                android:text="@string/egp_1_500"
+                tools:text="EGP 1,500"
                 android:textColor="@color/pale_blue"
                 android:textSize="11sp"
                 app:layout_constraintBottom_toBottomOf="@id/product_price"
@@ -105,8 +113,8 @@
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_regular"
                 android:text="@string/review"
-                android:textColor="@color/Darkblue"
-                android:textSize="14sp"
+                android:textColor="@color/dark_blue"
+                android:textSize="12sp"
                 app:layout_constraintStart_toStartOf="@id/product_price"
                 app:layout_constraintTop_toBottomOf="@id/product_price" />
 
@@ -117,8 +125,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="8dp"
                 android:fontFamily="@font/poppins_regular"
-                android:textColor="@color/Darkblue"
-                android:textSize="14sp"
+                android:textColor="@color/dark_blue"
+                android:textSize="12sp"
                 app:layout_constraintStart_toEndOf="@id/review_tv"
                 app:layout_constraintTop_toBottomOf="@id/product_price"
                 tools:text="(4.5)" />
@@ -136,12 +144,11 @@
                 android:id="@+id/add_to_cart_btn"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
-                android:src="@drawable/ic_plus_circle"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginStart="28dp"
+                android:src="@{isItemCart == false ? @drawable/ic_plus_circle : @drawable/ic_shoppingcart}"
+                app:layout_constraintBottom_toBottomOf="@id/review_value_tv"
+                app:layout_constraintStart_toEndOf="@id/review_value_tv"
                 app:layout_constraintEnd_toEndOf="parent" />
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

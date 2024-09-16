@@ -6,7 +6,7 @@
 
         <variable
             name="subcategory"
-            type="com.example.routee_commerce.model.Subcategory" />
+            type="com.route.domain.models.Subcategory" />
 
     </data>
 
@@ -38,6 +38,7 @@
                 android:layout_width="40dp"
                 android:layout_height="20dp"
                 android:layout_weight="1"
+                android:importantForAccessibility="no"
                 android:src="@drawable/right_arrow" />
 
         </LinearLayout>

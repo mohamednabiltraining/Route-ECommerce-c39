@@ -3,7 +3,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#004182</color>
-    <color name="Darkblue">#06004F</color>
+    <color name="blue30">#4D004182</color>
+    <color name="dark_blue">#06004F</color>
+    <color name="dark_blue60">#9906004F</color>
     <color name="descDarkBlue">#9806004F</color>
     <color name="gray">#484848</color>
     <color name="background">#dddddd</color>
@@ -13,5 +15,6 @@
     <color name="stroke_color">#4C06004F</color>
     <color name="pale_blue">#99004182</color>
     <color name="gray_110">#6E6E6E</color>
+    <color name="green">#3cb043</color>
 
 </resources>
